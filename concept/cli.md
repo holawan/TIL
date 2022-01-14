@@ -40,7 +40,6 @@ command line interface
 - ls
   - list segment
   - 현재 폴더에 어떤 파일이 있는지 확인
-
 - cd
   - change directory
   - cd {폴더}
@@ -54,6 +53,9 @@ command line interface
   - touch {파일}
     - {파일}을 생성하겠어!
     - 확장자를 반드시 포함해야 합니다!
+- open
+  - open {파일}
+    - {파일}을 열겠어!
 
 - mv
   - mv {파일1} {파일2}
