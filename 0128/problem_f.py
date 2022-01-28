@@ -14,7 +14,7 @@ def title(genre) :
         title = movie['title']
         r_title = re.sub('<b>|</b>','',title)
         movie_title.append(r_title)
-    return movie_title
+    return result
 
 
 def title_actor(genre) :
@@ -27,10 +27,11 @@ def title_actor(genre) :
     result = requests.get(BASE_URL,headers=params).json()['items']
     movie_info = {}
     for movie in result :
-        title = movie['title']
-        r_title = re.sub('<b>|</b>','',title)
         actor = movie['actor']
-        movie_info[r_title] = actor
+        r_actor = re.sub('<b>|</b>|\|',',',actor)
+        director = movie['director']
+        r_director = re.sub('\|',',',director)
+        movie_info[r_actor] = r_director
     return movie_info
 
 
@@ -41,6 +42,6 @@ if __name__ == '__main__':
     """
     pprint(title('드라마'))
     """
-    로맨스 장르의 영화 제목과 배우 추출 
+    로맨스 장르의 영화배우와 감독 추출
     """
     pprint(title_actor('로맨스'))

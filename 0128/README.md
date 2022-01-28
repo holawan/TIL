@@ -436,7 +436,7 @@ ranking을 완성합니다.
 
   - 연습만이 살길이다. 다양한 케이스를 연습해서, 원하는 정보를 가져오고 제공하는데 노력해야겠다. 
 
-  ## E. 장르별 영화제목, 배우 리스트 출력 
+  ## E. 특정 영화 배우, 감독 리스트 조회 (선택) 
 
   ``` python
   import requests 
@@ -455,7 +455,7 @@ ranking을 완성합니다.
           title = movie['title']
           r_title = re.sub('<b>|</b>','',title)
           movie_title.append(r_title)
-      return movie_title
+      return result
   
   
   def title_actor(genre) :
@@ -468,10 +468,11 @@ ranking을 완성합니다.
       result = requests.get(BASE_URL,headers=params).json()['items']
       movie_info = {}
       for movie in result :
-          title = movie['title']
-          r_title = re.sub('<b>|</b>','',title)
           actor = movie['actor']
-          movie_info[r_title] = actor
+          r_actor = re.sub('<b>|</b>|\|',',',actor)
+          director = movie['director']
+          r_director = re.sub('\|',',',director)
+          movie_info[r_actor] = r_director
       return movie_info
   
   
@@ -482,7 +483,7 @@ ranking을 완성합니다.
       """
       pprint(title('드라마'))
       """
-      로맨스 장르의 영화 제목과 배우 추출 
+      로맨스 장르의 영화 배우와 감독 추출 
       """
       pprint(title_actor('로맨스'))
   
@@ -494,7 +495,7 @@ ranking을 완성합니다.
   2. 검색 후 title과 배우를 찾아 새로운 리스트에 저장합니다. 
   3. <b></b>와 같은 Html 태그를 re.sub()함수를 이용해 제거합니다. 
   4. 결과를 반환할 빈 dictionary를 준비합니다.
-  5. 영화 제목을 key로 배우를 value로 리스트를 구성합니다. 
+  5. 영화 배우를 key로 감독을  value로 리스트를 구성합니다. 
   
   ### 후기
   
