@@ -1,0 +1,15 @@
+.box{
+    width: 10rem;
+    height: 10rem;
+    border: 1px solid black;
+    background-color: crimson;
+}
+.big{
+    width: 20rem;
+    height: 10rem;
+    border: 1px solid black;
+    background-color: cornflowerblue;
+}
+
+
+
