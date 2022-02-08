@@ -1,0 +1,21 @@
+/* 아래에 코드를 작성하시오. */
+nav{
+  height: 80px;
+}
+body {
+  height: 1300px;
+  margin: 0;
+}
+
+header{
+  height:600px;
+  background-image: url('images/main.png');
+  background-size: cover;
+}
+
+footer {
+  height: 60px;
+}
+a{
+  text-decoration: none;
+}
