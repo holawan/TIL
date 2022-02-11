@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="01_nav_footer.css">
+  <link rel="stylesheet" href="02_home.css">
+  
+  <title>Home</title>
+</head>
+<body>
+
+  <!-- 01_nav_footer.html -->
+  <!-- 01_nav_footer 에서 완성한 Navigation bar 코드를 붙여넣어 주세요. -->
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top ">
+    <div class="container-fluid  d-flex justify-content-between ">
+      <a class="navbar-brand" href="02_home.html">
+        <img class="logo" src="images/logo.png" alt="logo">
+      </a>
+        <div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="02_home.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="03_community.html">Comunity</a>
+              </lfixed-bootoom i>
+              <li class="nav-item">
+                <a href="#"  class="nav-link" data-bs-toggle="modal" data-bs-target="#login" >Login</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </div>
+  </nav>
+  <!-- 02_home.html -->
+  <!-- Modal -->
+  <div class="modal fade" id="login" tabindex="-1" aria-labelledby="loginLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginLabel">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action='' class="container">
+          <div class="mb-3 ">
+            <label for="loginuserid">ID </label><br>
+            <input type="text" id="loginuserid" placeholder="ID를 입력하세요" name="id">
+          </div>
+          <div class="mb-3">
+            <label for="loginuserpwd">Password</label><br>
+            <input type="password"  id="loginuserpwd" placeholder="패스워드를 입력하세요" name="password">
+          </div>
+        
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Login</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- header -->
+  <!-- carosel 컴포넌트를 가져와서 각 이미지를 입력한다. data-vs-interval을 이용해 페이지 전환 속도를 조절한다. -->
+  <header>
+    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active" data-bs-interval="2000">
+          <img src="images/header1.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item" data-bs-interval="2000">
+          <img src="images/header2.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item" data-bs-interval="2000">
+          <img src="images/header3.jpg" class="d-block w-100" alt="...">
+        </div>
+      </div>
+      <!-- 버튼을 클릭하면 위치에 따라 이전, 이후 사진으로 이동한다.  -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </header>
+  <!-- Boxoffice는 배경을 검은색으로 주고 텍스트를 중앙으로 정렬해서 강조한다. -->
+  <h1 class="my-2 text-center text-white bg-dark p-2">Boxoffice</h1>
+  <!-- div를 컨테이너로 선언 -->
+  <div class="container">
+    <section>
+      <!-- class = row로 주고, 화면이 sm이하일 때는 1개만 lg 이하일때는 2개 lg 이상일때는 3개가 보이게함  -->
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3">
+        <article>
+          <!-- card 컴포넌트를 이용해 영화 사진, 제목, 설명 구현 -->
+          <div class="card">
+            <img src="images/movie1.jpg" class="img-fluid rounded-start" alt="...">
+          </div>
+            <div class="card-body">
+              <h5 class="card-title">쇼생크 탈출</h5>
+              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        </article>
+        <article>
+          <div class="card">
+            <img src="images/movie2.jpg" class="img-fluid rounded-start" alt="...">
+          </div>
+            <div class="card-body">
+              <h5 class="card-title">죽은 시인의 사회</h5>
+              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        </article>
+        <article>
+          <div class="card">
+            <img src="images/movie3.jpg" class="img-fluid rounded-start" alt="...">
+          </div>
+            <div class="card-body">
+              <h5 class="card-title">다크 나이트 라이즈</h5>
+              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        </article>
+        <article>
+          <div class="card">
+            <img src="images/movie4.jpg" class="img-fluid rounded-start" alt="...">
+          </div>
+            <div class="card-body">
+              <h5 class="card-title">그랜드 부다페스트 호텔</h5>
+              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        </article>
+        <article>
+          <div class="card">
+            <img src="images/movie5.jpg" class="img-fluid rounded-start" alt="...">
+          </div>
+            <div class="card-body">
+              <h5 class="card-title">Her</h5>
+              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        </article>
+        <article>
+          <div class="card">
+            <img src="images/movie6.jpg" class="img-fluid rounded-start" alt="...">
+          </div>
+            <div class="card-body">
+              <h5 class="card-title">위대한 쇼맨</h5>
+              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        </article>
+      </div>
+    </section>
+  </div>
+  <!-- 01_nav_footer.html -->
+  <!-- 01_nav_footer 에서 완성한 Footer 코드를 붙여넣어 주세요. -->
+  <footer class="fixed-bottom d-flex justify-content-center align-items-center bg-dark">
+    <div class="text-center p-2 text-white">Web-bootstrap PJT, by김동완</div>
+  </footer>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>  
+</body>
+</html>
