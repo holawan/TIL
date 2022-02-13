@@ -1,0 +1,30 @@
+div{
+  height: 100px;
+  width: 100px;
+  background-color: #9775fa;
+  color: black;
+  line-height: 100px;
+  text-align: center;
+}
+
+p{
+  text-align: center;
+}
+
+.relative{
+  position: relative;
+  top: 100px;
+  left: 100px;
+}
+
+.absolute-child{
+  position: absolute;
+  top: 50px;
+  left: 50px;
+}
+
+.fixed{
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}

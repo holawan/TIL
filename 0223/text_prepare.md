@@ -351,3 +351,134 @@ h4{
   - selectorA의 형제 요소 중 뒤에 위치하는 selector B 요소를 모두 선택
 - 인접 형제 결합자
   - selectorA의 형제 요소 중 바로 뒤에 위치하는 selectorB 요소를 선택
+
+###  Box model
+
+- 모든 HTML 요소는 box 형태로 되어있음
+- 하나의 박스는 네 부분으로 이루어짐
+  - content
+  - padding
+  - border
+  - margin
+
+``` css
+
+반시계방향으로 작동! 
+.margin-1{
+    margin:10px;
+    # 상하좌우 10
+}
+.margin-2{
+    margin: 10px 20px;
+    #상하 10 좌우 20
+}
+.margin-3{
+    margin:10px 20px 30px;
+    #상 10 좌우 20 하 30
+}
+.margin-4 {
+    margin : 10px 20px 30px 40px;
+    #상 10 우 20 하 30 좌 40
+}
+```
+
+#### box-sizing
+
+- 기본적으로 모든 요소의 box-sizing은 content-box
+  - padding을 제외한 순수  contents 영역만을 box로 지정
+- 다만, 우리가 일반적으로 영역을 볼 때는 border 까지의 너비를 100px 보는 것을 원함
+  - 그 경우 box-sizing을 border-box으로 설정 
+
+#### 대표적으로 활용되는 display
+
+- display : block
+  - 줄 바꿈이 일어나는 요소
+  - 화면 크기 전체의 가로 폭을 차지한다.
+  - 블록 레벨 요소안에 인라인 레벨 요소가 들어갈 수 있음
+- display : inline 
+  - 줄 바꿈이 일어나지 않는 행의 일부 요소
+  - content 너비만큼 가로 폭을 차지한다.
+  - width, height, margin-top, margin-bottom을 지정할 수 없다.
+  - 상하 여백은 line-height로 지정한다. 
+- display : inline-block
+  - block과 inline 레벨 요소의 특징을 모두 가짐
+  - inline처럼 한 줄에 표시 가능하고, block 처럼 width, height, margin 속성을 모두 지정할 수 있음
+- display : none 
+  - 해당 요소를 화면에 표시하지 않고, 공간조차 부여되지 않음 
+  - 이와 비슷한 visibility : hidden은 해당 요소가 공간은 차지하거나 화면에 표시만 하지 않는다.
+
+#### CSS position
+
+- 문서 상에서 요소를 위치를 지정
+- static : 모든 태그의 기본 값(기준 위치)
+  - 일반적인 요소의 배치 순서에 따름(좌측 상단)
+  - 부모 요소 내에서 배치될 때는 부모 요소의 위치를 기준으로 배치 됨
+- 아래는 좌표 프로퍼티(top, bottom, left, right)를 사용하여 이동 가능
+  - relative
+    - 자기 자신의 static 위치를 기준으로 이동(normal flow 유지)
+    - 레이아웃에서 요소가 차지하는 공간은 static 일 때와 같음(normal position 대비 offset)
+  - absolute : 절대 위치
+    - 요소를 일반적인 문서 흐름에서 제거 후 레이아웃에 공간을 차지하지 않음(normal flow에서 벗어남)
+    - static이 아닌 가장 가까이 있는 부모/조상 요소를 기준으로 이동(없는 경우 body)
+  - fixed : 고정 위치
+    - 요소를 일반적인 문서 흐름에서 제거 후 레이아웃에 공간을 차지하지 않음(normal flow에서 벗어남)
+    - 부모 요소와 관계없이 viewport를 기준으로 이동
+      - 스크롤시에도 항상 같은 곳에 위치함 
+
+#### CSS 원칙 1
+
+모든 요소는 네모(박스모델)이고, 위에서부터 아래로, 왼쪽에서 오른쪽으로 쌓인다.
+
+display에 따라 요소간 배치가 달라짐
+
+#### CSS 원칙2 
+
+position으로 위치의 기준을 변경
+
+- relative : 본인의 원래 위치
+- absolute : 특정 부모의 위치 
+- fixed : 화면의 위치 
+
+# Flex
+
+### Flex 속성
+
+- 배치 설정
+
+  - flex-direction
+    - Main axis  기준 방향 설정
+    - 역방향의 경우 HTML 태그 선언 순서와 시각적으로 다르니 유의(웹 접근성에 영향)
+    - row(행방향 정렬) row-reverse(행방향 역정렬) column(열방향 정렬) column-reverse(열방향 역정렬) 
+  - flex-wrap
+    - 아이템이 컨테이너를 벗어나는 경우 해당 영역 내에 배치되도록 설정
+    - 즉, 기본적으로 컨테이너 영역을 벗어나지 않도록 함 
+      - nowrap(기본값) : 한 줄에 배치
+      - wrap : 넘치면 그 다음줄로 배치
+
+- 공간 나누기 
+
+  - justify-content (main axis)
+  - align-content (cross axis)
+    - flex-start(기본 값) : 아이템들을 axis 시작점으로
+    - flex-end : 아이템들을 axis 끝 쪽으로
+    - center : 아이템들을 axis 중앙으로 
+    - space-between : 아이템 사이의 간격을 균일하게 분배
+    - space-around : 아이템을 둘러싼 영역을 균일하게 분배(가질 수 있는 영역을 반으로 나눠서 양쪽에)
+    - space-evenly : 전체 영역에서 아이템 간 간격을 균일하게 분배\
+  - Cross aixs 를 중심으로
+    - stretch(기본 값) : 컨테이너를 가득 채움
+    - flex-start : 위
+    - flex-end : 아래 
+    - center : 가운데
+    - baseline : 텍스트 baseline에 기준선을 맞춤
+  - 기타 속성
+    - flex-glow : 남은 영역을 아이템에 분배
+    - order : 배치 순서
+
+- 정렬
+
+  - align-items(모든 아이템을 cross axis 기준으로)
+
+  - align-self (개별 아이템)
+
+    
