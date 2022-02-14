@@ -106,7 +106,7 @@ HTML이란 하이퍼링크를 통해 사용자가 한 문서에서 다른 문서
   - article : 문서, 페이지, 사이트 안에서 독립적으로 구분되는 영역
   - footer : 문서 전체나 섹션의 푸터(마지막 부분)
 - Non semantic 요소는 div, span 등이 있으며 h1, table 태그들도 시맨틱 태그로 볼 수 있음
-- 개발자 및 사용자 뿐만 이나리 검색엔진 등에 의미있는 정보의 그룹을 태그로 표현
+- 개발자 및 사용자 뿐만 아니라검색엔진 등에 의미있는 정보의 그룹을 태그로 표현
 - 단순히 구역을 나누는 것 뿐만 아니라 '의미'를 가지는 태그들을 활용하기 위한 노력
 - 요소의 의미가 명확해지기 때문에 코드의 가독성을 높이고 유지보수를 쉽게 함
 - 검색엔진최적화(SEO)를 위해서 메타태그, 시맨틱 태그 등을 통한 마크업을 효과적으로 활용 해야함
@@ -139,7 +139,7 @@ a`, `abbr`, `acronym`, `b`, `bdo`, `big`, `br`, `button`, `cite`, `code`, `dfn`,
 
 - <a> : href 속성을 활용하여 다른 URL로 연결하는 하이퍼링크 생성
 - <b> 굵은 글씨 요소
-- <strong> 중요한 강조하고자 하는 굵은글씨 
+- <strong> 중요한 강조하고자 하는 굵은글씨 </strong>
 - <i> 기울임 글씨 요소
 - <em> 중요한 강조하고자 하는 기울임 글씨
 - \<br> 텍스트 내에 줄바꿈 생성
@@ -155,62 +155,6 @@ a`, `abbr`, `acronym`, `b`, `bdo`, `big`, `br`, `button`, `cite`, `code`, `dfn`,
 - \<pre> HTML에 작성한 내용을 그대로 표현 보통 고정폭 글꼴이 사용되고 공백 문자를 유지
 - \<blockquote> 텍스트가 긴 인용문 주로 들여쓰기를 한 것으로 표현됨
 - \<div> 의미없는 블록 레벨 컨테이너
-
-### table 태그 기본 구성
-
- - thead
-   - tr> th
- - tbody 
-   - tr > td
- - tfoot 
-   - tr > td
- - caption : 표 설명 또는 제목 
- - colspan, rowspan 속성을 활용하여 셀 병합 
-
-### form
-
-- \<form>은 정보(데이터)를 서버에 제출하기 위한 영역
-- \<form> 기본 속성
-  - action : form을 처리할 서버의 URL
-  - method : form을 제출할 때 사용할 HTTP 메서드 (GET or POST)
-  - enctype : method가 post인 경우 데이터의 유형
-    - application/x-www-form-urlencoded : 기본값
-    - multipart/form-data : 파일 전송시 (input type이 file인 경우)
-    - text/plain :  HTML5 디버깅 용 (잘 사용되지 않음 )
-
-### Input
-
-- 다양한 타입을 가지는 입력 데이터 유형과 위젯이 제공됨
-- \<input> 대표적인 속성
-  - name : form control에 적용되는 이름 (이름/값 페어로 전송됨)
-  - value : form control에 적용되는 값 (이름/갑 페어로 전송됨)
-  - required, readonly, autofocus, autocomplete, disabled 등 
-- 일반적으로 입력을 받기 위하여 제공되며 타입별로 HTML 기본 검증 혹은 추가 속성을 활용할 수 있음
-  - text : 일반 텍스트 입력
-  - password : 입력시 값이 보이지 않고 문자를 특수기호로 표현
-  - email : 이메일 형식이 아닌 경우 제출 불가
-  - number : min,max,step 속성을 활용하여 숫자 범위 설정 가능 
-  - file : accept 속성을 활용하여 파일 타입 지정 가능 
-- 항목중 선택
-  - 일반적으로 label을 사용하여 내용을 작성하여 항목 중 선택할 수 있는 input을 제공
-  - 동일 항목에 대하여는 name을 지정하고 선택된 항목에 대한 value를 지정해야 함 
-    - checkbox : 다중 선택
-    - radio : 단일 선택
-- 기타
-  - 다양한 종류의 input을 위한 picker를 제공
-    - color : color picker
-    - date : date picker
-  - hidden input을 활용하여 사용자 입력을 받지 않고 서버에 전송되어야 하는 값을 설정
-    - hidden : 사용자에게 보이지 않는 input
-
-### input label
-
-- label을 클릭하여 input 자체의 초점을 맞추거나 활성화 시킬 수 있음
-  - 사용자는 선택할 수 있는 영역이 늘어나 웹/모바일 환경에서 편하게 사용할 수 있음
-  - label과 input 입력의 관계가 시각적일 뿐만 아니라 화면 리더기에서도 label을 읽어 쉽게 내용을 확인할 수 있도록 함
-  - \<input>에  id 속성을, \<label>에는  for 속성을 활용하여 상호 연관을 시킴 
-
-\* label의 for 랑 input의 id, name이랑 value가 묶인다. 
 
 # CSS
 
@@ -291,6 +235,14 @@ h4{
 .box p {
     color : blue;
 }
+#일반 형제 결합자
+p~span{
+    color:red;
+}
+#인접형제 결합자
+p+span{
+    color: red;
+}
 ```
 
 #### CSS 적용 우선순위
@@ -327,19 +279,6 @@ h4{
 - rem
   - (바로 위, 부모 요소에 대한) 상속의 영향을 받지 않음
   - 최상위 요소(html)의 사이즈를 기준으로 배수 단위를 가짐 
-
-### 색상 단위
-
-- 색상 키워드
-  - 대소문자를 구분하지 않음
-  - red,blue,black과 같은 특성 색을 직접 글자로 나타냄
-- RGB색상
-  - 16진수 표기법 혹은 함수형 표기법을 사용해서 특정 색을 표현하는 방식
-  - '#' + 16진수
-  - rgb()함수형 표기
-- HSL 색상
-  - 색상, 채도, 명도를 통해 특정 색을 표현하는 방식 
-- a는 alpha(투명도)
 
 ### 결합자
 
@@ -464,7 +403,7 @@ position으로 위치의 기준을 변경
     - center : 아이템들을 axis 중앙으로 
     - space-between : 아이템 사이의 간격을 균일하게 분배
     - space-around : 아이템을 둘러싼 영역을 균일하게 분배(가질 수 있는 영역을 반으로 나눠서 양쪽에)
-    - space-evenly : 전체 영역에서 아이템 간 간격을 균일하게 분배\
+    - space-evenly : 전체 영역에서 아이템 간 간격을 균일하게 분배
   - Cross aixs 를 중심으로
     - stretch(기본 값) : 컨테이너를 가득 채움
     - flex-start : 위
