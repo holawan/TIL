@@ -1,3 +1,87 @@
+## 2차원 배열 기본 
+
+###  배열 순회
+
+n x m배열의 n*m 개의 모든 원소를 빠짐없이 조사하는 방법
+
+### 행 우선 순회
+
+```python
+# i행의 좌표
+# j열의 좌표
+for i in range(n) :
+    for j in range(m) :
+        Array[i][j]
+```
+
+### 델타를 이용한 2차 배열 탐색
+
+```python
+arr[0...N-1][0...N-1] # NxN배열
+di[] <- [-1,1,0,0]
+dj[] <- [0,0,-1,1]
+# [-1,0]상 [1,0] 하 [0,-1] 좌 [0,1] 우
+di = [0 1, 0, -1] #우하좌상
+dj = [1,0, -1, 0]
+
+# for k in range(4) :
+#     ni = i + di[k]
+#     nj = j + dj[k]
+#     if 0<=ni<N and 0<=nj<M :
+#         arr[ni][nj]
+```
+
+
+
+```python
+arr = [[1,2,3],[4,5,6],[7,8,9]]
+N = 3
+for i in range(N) :
+    for j in range(N) :
+        for di, dj in [(0, 1), (1, 0), (0, -1), (-1, 0)] :
+            ni = i + di
+            nj = j + dj
+            if 0 <= ni < N and 0 <= nj < N:
+                print(i,j,arr[ni][nj])
+        print()
+```
+
+### 0 앞뒤로 붙이기
+
+```python
+# 0 앞뒤로 붙이기
+N = int(input())
+#arr1 = [0]+list(map(int,input().split()))+[0]
+arr2 = [[0]*(N+1)] + [[0]+list(map(int,input().split())) for _ in range(N)]
+pprint(arr2)
+```
+
+### 전치행렬
+
+```python
+arr = [[1,2,3],[4,5,6],[7,8,9]]
+
+for i in range(3):
+    for j in range(3) :
+        if i < j :
+            arr[i][j],arr[j][i]  = arr[j][i],arr[i][j]
+```
+
+### 비트 연산자
+
+#### 10진수를 2진수로 변환후 연산을 진행하는 것 ?
+
+- & : 비트 단위로 AND 연산을 한다.
+- | : 비트 단위로 OR 연산을 한다.
+- << :  피연산자의 비트 열을 왼쪽으로 이동시킨다. (X 2)
+- \>> : 피연산자의 비트 열을 오른쪽으로 이동시킨다.  (// 2)
+
+1 << n = 2^n 
+
+​	즉, 원소가 n개일 경우의 모든 부분집합의 수를 의미한다.
+
+
+
 ## 비트연산자 완전탐색
 
 ``` python
@@ -32,6 +116,13 @@ print(power_set)
 
 ## 버블솔트
 
+- 인접한 두 개의 원소를 비교하며 자리를 계속 교환하는 방식
+- 정렬 과정
+  - 첫 번째 원소부터 인접한 원소끼리 계속 자리를 교환하면서 맨 마지막자리까지 이동한다.
+  - 한 단계가 끝나면 가장 큰 원소가 마지막 자리로 정렬된다
+  - 교환되면 자리를 이동하는 모습이 물 위에 올라오는 거품 모양과 같다고 하여 버블 정렬이라고 한다. 
+- 시간복잡도 : O(n^2)
+
 ```python
 def bubble_sort(num):
     #원소의 마지막 부터
@@ -58,6 +149,15 @@ print(bubble_sort(num))
 
 
 ## 카운팅솔트
+
+- 항목들의 순서를 결정하기 위해 집합에 각 항목이 몇 개씩 있는지 세는 작업을 하며 선형 시간에 정렬하는 효율적인 알고리즘
+- 제한사항
+  - 정수나 정수로 표현할 수 있는 자료에 대해서만 적용 가능 : 각 항목의 발생 회수를 기록하기 위해 정수 항목으로 인덱스 되는 카운트들의 배열을 사용하기 때문이다.
+  - 카운트들을 위한 충분한 공간을 할당하려면 집합 내 가장 큰 정수를 알아야한다. 
+- 시간 복잡도 : O(n+k) :n은 리스트의 길이, k는 정수 최대값 
+- 1단계 : Data에서 각 항목들의 발생 회수를 세고, 정수 항목들로 직접 인덱스 되는 카운트 배열 counts에 저장
+- 2단계 정렬된 집합에서 각 항목의 앞에 위치할 항목의 개수를 반영하기 위해 원소를 조정  
+- counts[i]를 감소시키고 temp에 삽입 
 
 ```python
 def counting_sort(input_arr, k):
@@ -105,6 +205,13 @@ print(counting_sort(lst, 5)) # [0, 1, 1, 1, 2, 3, 4, 4]
 
 ## 선택정렬
 
+- 주어진 자료들 중 가장 작은 값의 원소부터 차례대로 선택하여 위치를 교환하는 방식
+- 정렬 과정
+  - 주어진 리스트 중에서 최소값을 찾는다. 
+  - 그 값을 리스트의 맨 앞에 위치한 값과 교환한다.
+  - 맨 처음 위치를 제외한 나머지 리스트를 대상으로 위의 과정을 반복한다.
+- 시간 복잡도 : O(n^2)
+
 ```python
 def selection_sort(arr):
     for i in range(len(arr) - 1):
@@ -120,9 +227,62 @@ def selection_sort(arr):
 3. 리스트의 맨 앞과 교환한다.
 4. 미정렬 i가 증가함에 따라, 정렬된 부분과 미정렬된 부분이 나뉘어지고 계속 최소값을 찾아 미정렬 부분의 첫번째로 보낸다.
 
+## 순차 검색
+
+- 일렬로 되어 있는 자료를 순서대로 검색하는 방법
+  - 가장 간단하고 직관적인 검색 방법
+  - 배열이나 연결 리스트 등 순차구조로 구현된 자료구조에서 원하는 항목을 찾을 때 유용함
+  - 알고리즘이 단순하여 구현이 쉽지만, 검색 대상의 수가 많은 경우에는 수행시간이 급격하게 증가하여 비효율적임
+- 검색 과정
+  - 첫 번째 원소부터 순서대로 검색 대상과 키 값이 같은 원소가 있는지 찾는다.
+  - 키 값이 동일한 원소를 찾으면 그 원소의 인덱스를 반환한다.
+  - 자료구조의 마지막에 이를 때까지 검색대상을 찾지 못하면 검색을 종료한다. 
+- 찾고자 하는 원소의 순서에 따라 비교회수가 결정됨
+  - 첫번째 원소를 찾을때는 1번 비교, 두번째 원소를 찾을때는 2번 비교
+  - 정렬되지 않은 자료에서의 순차 검색의 평균 비교 회수
+    -  (1/n)*(1+...+n) = (n+1)/2\
+- 시간 복잡도 : O(n)
+
+- 정렬되어 있는 경우
+  - 정렬이 되어있으므로, 검색 실패를 반환하는 경우 평균 비교회수가 반으로 줄어든다.
+  - 시간복잡도 : O(n)
+
+
+
+```python
+def sequentialSearch(lst,n,key):
+    i = 0
+    while i <n and a[i] !=key :
+        i += 1 
+    if i<n : 
+        return i
+   	else :
+        return -1 
+```
+
+```python
+def sequentialSearch2(lst,n,key) :
+    i = 0
+    while i<n and a[i]<key :
+        i +=1 
+    if i<n and a[i] == key:
+        return i
+   	else :
+        return -1 
+```
+
 
 
 ## 이진탐색
+
+- 자료의 가운데에 있는 항목의 키 값과 비교하여 다음 검색의 위치를 결정하고 검색을 계속 진행하는 방법 
+  - 목적 키를 찾을 때까지 이진 검색을 순환적으로 반복 수행함으로써 검색범위를 반으로 줄여가면서 보다 빠르게 검색을 수행함
+- 이진 검색을 하기 위해서는 자료가 정렬된 상태여야함. 
+- 검색 과정
+  - 자료의 중앙에 있는 원소를 고른다.
+  - 중앙 원소의 값과 찾고자하는 목표값을 비교한다.
+  - 목표값이 중앙 원소의 값보다 작으면 자료의 왼쪽 반에 대해서 새로 검색을 수행하고, 크다면 자료의 오른쪽 반에 대해서 새로 검색을 수행한다. 
+  - 
 
 ```python
 def binary_search(lst,target) :
@@ -131,9 +291,9 @@ def binary_search(lst,target) :
     end = lenght-1 #끝 쪽수
     while start<=end : #찾으려는 부분 처음이 끝보다 작거나 같으면
         middle = (start+end)//2 #middle start+end를 2로 나눈 값의 몫
-        if target == middle : #target과 middle이 같으면
+        if target == lst[middle] : #target과 middle이 같으면
             return cnt #반복 횟수 반환
-        elif middle > target : #middle이 찾으려는 target보다 크면
+        elif lst[middle] > target : #middle이 찾으려는 target보다 크면
             end = middle-1 #마지막 부분 -1을 middle로 갱신
         else : #middle이 찾으려는 target보다 작으면
              start = middle+1 #처음 부분 +1을 middle로 갱신
@@ -141,8 +301,8 @@ def binary_search(lst,target) :
 ```
 
 1.  시작점과 끝점을 지정한다.
-2. 시작점이 끝점보다 작거나 같으면
-3. 중앙은 (시작점+끝점)을 2로 나눈 몫
+2.  시작점이 끝점보다 작거나 같으면
+3.  중앙은 (시작점+끝점)을 2로 나눈 몫
 4. 찾으려는 값과 일치하면
    1. 끝냄
 5. 일치하지 않고 중앙값이 찾으려는 값보다 크면 
@@ -150,7 +310,28 @@ def binary_search(lst,target) :
 6. 중앙값이 찾으려는 값보다 작으면 
    1. 시작점을 middle+1로
 
+- 재귀함수 이용
+
+```python
+def binarySearch2(a,low,high,key) :
+    if low>high :
+        return False 
+    else :
+        middle = (low+high)//2
+        if key == a[middle] : 
+            return True
+        elif key < a[middle] :
+            return binarySearch2(a,low,middle-1,key)
+        elif a[middle]<key :
+            return binarySearch2(a,middle+1,high,key)
+```
+
+
+
 ## BruteForce
+
+- 본문 문자열을 처음부터 끝까지 차례대로 순회하면서 패턴 내의 문자들을 일일이 비교하는 방식으로 동작 
+- 최악의 경우 시간복잡도는 텍스트의 모든 위치에서 패턴을 비교해야하므로 O(MN)이 됨
 
 ```python
 def BruteForce2(p,t) :
@@ -175,3 +356,178 @@ def BruteForce2(p,t) :
 3. 일치하면 계속 
 4. j가 m-1과 같으면 
 5. 일치하는 것으로 간주 
+
+## KMP
+
+- 불일치가 발생한 텍스트 스트링의 앞부분에 어떤 문자가 있는지를 미리 일고 있으므로, 불일치가 발생한 앞부분에 대하여 다시 비교하지 않고 매칭을 수행
+- 패턴에 중복이 있을 경우에만 적용 가능 
+- 패턴을 전처리하여 배열 next[M]을 구해서 잘못된 시작을 최소화함
+- 시간복잡도: O(M+N)
+- 텍스트에서 abcdabc까지는 매치되고 e에서 실패한 상황 패턴의 맨 앞의 abc와 실패직전의 abc는 동일함을 이용
+
+```python
+# T : target / P : pattern
+
+def pre_process(P):
+
+    M = len(P)
+    lps = [0] * len(P)
+    
+    j = 0
+
+    for i in range(1,M):
+        if P[i] == P[j]:
+            lps[i] = j + 1
+            j += 1
+        else:
+            j = 0
+            if P[i] == P[j]:
+                lps[i] = j + 1
+                j += 1  
+
+    return lps
+
+
+def KMP(T, P, lps):
+
+    N = len(T)
+    M = len(P)
+
+    i, j = 0, 0
+    pos = -1
+    while i < N:
+        if P[j] == T[i]:
+            i += 1
+            j += 1
+        else:
+            if j!= 0:
+                j = lps[j-1]
+            else:
+                i += 1
+        if j == M:
+            pos = i - j
+            break
+
+    return pos
+
+T = 'abcdabeeababcdabcef'
+P = 'abcdabcef'
+
+
+N = len(T)
+M = len(P)
+lps = pre_process(P)
+print(lps)
+
+pos = KMP(T, P, lps)
+print(pos)
+```
+
+## Boyer
+
+- 오른쪽에서 왼쪽으로 비교
+- 대부분의 상용 소프트웨어에서 채택하고 있는 알고리즘
+- 보이어-무어 알고리즘은 패턴에 오른쪽 끝에 문자가 불일치하고 이 문자가 패턴 내에 존재하지 않는 경우, 이동거리는 무려 패턴의 길이만큼
+- 앞의 두 매칭 알고리즘의 공통점 텍스트 문자열의 문자를 적어도 한번씩 훑는다.
+- 보이어 무어 알고리즘은 텍스트 문자를 다 보지 않아도 됨
+- 최악의 경우 수행시간 O(MN)
+- 입력에 다라 다르지만 일반적으로 O(n) 보다 시간이 덜 소요됨 
+
+```python
+# T : target / P : pattern
+
+
+def pre_process(P):
+    from collections import defaultdict
+
+    M = len(P)    
+
+    # skip 배열 대신 딕셔너리
+    PI = defaultdict(int)
+
+    # 실 사용은 M - value로 할 예정.
+    for i in range(M-1):
+        PI[P[i]] = 1 + i
+    return PI
+
+
+def boyer_moore(T, P, PI):
+
+    N = len(T)
+    M = len(P)
+
+    i = 0
+    # 실패할 경우 -1 return
+    pos = -1
+
+    while i <= N - M:
+        # skip 잘 되고있나 확인
+        print(i)
+
+        # 
+        # M번째 인덱스
+        j = M - 1
+        k = i + M - 1
+
+        # 비교할 j가 남아있고, text와 pattern이 같으면 1씩 줄여 왼쪽 비교
+        while j >= 0 and P[j] == T[k]:
+            j -= 1
+            k -= 1
+        # 비교 성공
+        if j == -1:
+            pos = i
+            break
+        # i를 M - value만큼 스킵
+        i = i + M - PI[T[i + M - 1]]
+
+    return pos
+
+
+
+
+# Target 문자
+T = "a pattern matching algorithm"
+
+# Pattern 문자
+P = "rithm"
+
+# skip 배열을 만들어줌
+PI = pre_process(P)
+print(PI)
+
+# target, pattern, skip배열을 인자로 넘김
+pos = boyer_moore(T, P, PI)
+print(pos)
+```
+
+```python
+#BoyerMooer algorithm
+#불필요한 탐색 스킵
+def skip(pattern, char):
+    for i in range(len(pattern)-2, -1, -1):
+        if pattern[i] == char:
+            return len(pattern)-i-1
+    return len(pattern)
+#BM 본 함수
+#text안에 pattern과 일치하는 문자열 있으면 1반환 바로 종료
+#끝까지 탐색했는데 pattern과 일치하는 문자열이 없으면 0반환
+def boyer(pattern, text):
+    cnt = 0
+    patternlen = len(pattern)
+    textlen = len(text)
+    i = 0
+    while i <= textlen - patternlen:
+        j = patternlen - 1
+        while j >= 0:
+            if pattern[j] != text[i+j]:
+                move = skip(pattern, text[i + patternlen - 1])
+                break
+            j = j - 1
+        if j == -1:
+            cnt += 1
+            return 1
+        else:
+            i += move
+    return 0
+```
+
