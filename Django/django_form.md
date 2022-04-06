@@ -196,3 +196,187 @@ class ArticleForm(forms.ModelForm) :
 - 회원가입은 DB에 저장해야하니까 ModelForm 사용
 - 로그인은 정보만 받으면 되니까 Form 사용
 
+### Create 수정
+
+```python
+def create(request):
+    form = ArticleForm(request.POST)
+    #form에서 전달한 데이터가 유효하면 저장하고 detail을 redircet해라
+    if form.is_valid() :
+        # form.save()를 하면 생성된 객체를 리턴한다.
+        article = form.save()
+        return redirect('articles:detail',article.pk)
+    #유효하지 않으면 에러를 출력하고 new로 돌아감
+    print(form.errors)
+    return redirect('articles:new')
+    # title = request.POST.get('title')
+    # content = request.POST.get('content')
+
+    # article = Article(title=title, content=content)
+    # article.save()
+
+    # return redirect('articles:detail', article.pk)
+```
+
+- 유효성 검사를 하면 아무래도 model 자체에 설정된 기준을 바탕으로 검사를 하는 것 같다. 
+
+### is_valid\() method
+
+- 유효성 검사를 실행하고, 데이터가 유효한지 여부를 Boolean으로 반환
+- 데이터 유효성 검사를 보장하기 위한 많은 테스트에 대해 Django는 is_valid\()를 제공
+
+- 유효성 검사
+  - 요청한 데이터가 특정 조건에 충족하는지 확인하는 작업
+  - 데이터베이스 각 필드 조건에 올바르지 않은 데이터가 서버로 전송되거나 저장되지 않도록 하는 것
+
+### The save\() method
+
+- Form에 바인딩 된 데이터에서 데이터베이스 객체를 만들고 저장
+- ModleForm의 하위(sub)클래스는 기존 모델 인스턴스를 키워드 인자 instance로 받아 들일 수 있음 
+  - 이것이 제공되면 save\()는 해당 인스턴스를 수정 (UPDATE)
+  - 제공되지 않은 경우 save()는 지정된 모델의 새 인스턴스를 만듬(CREATE)
+- Form의 유효성이 확인되지 않은 경우 (hasn't been validated) save()를 호출하면 form.errors를 확인하여 에러 확인 가능 
+
+### CREATE, NEW 함수 합치기
+
+```python
+def create(request):
+    if request.method == 'POST' :
+
+        form = ArticleForm(request.POST)
+        #form에서 전달한 데이터가 유효하면 저장하고 detail을 redircet해라
+        if form.is_valid() :
+            # form.save()를 하면 생성된 객체를 리턴한다.
+            article = form.save()
+            return redirect('articles:detail',article.pk)
+        #유효하지 않으면 다시 new로 가라 
+        # title = request.POST.get('title')
+        # content = request.POST.get('content')
+
+        # article = Article(title=title, content=content)
+        # article.save()
+
+        # return redirect('articles:detail', article.pk)
+    elif request.method == 'GET' :
+
+        form = ArticleForm()
+    context = {
+        'form' : form,
+    }
+    # 유효성 검사를 통과하지 못하면 form은 에러메시지를 담고 있다. 그래서 에러메시지를 출력한다. 
+    return render(request, 'articles/create.html',context)
+
+```
+
+- 현재 두 함수는 '생성'이라는 기능을 하기위해 만들어졌는데, 이 두개를 합치려면 호출이 POST로 들어오나 GET으로 들어오는지 구분해서 합칠 수 있다. 
+- POST이면 들어온 정보에 대해 유효성 검사 후 통과하면 detail로 간다
+- 유효성검사를 통과하지 못하면 에러메시지를 담아서 보여준다 
+  - save() 메소드를 들어가보면 객체를 save를 하고 그 객체를 return한다.  
+- GET이면 form을 생성하는 create.html로 이동한다. 
+
+### Edit, UPDATE 함수 합치기
+
+```python
+def update(request, pk):
+    article = Article.objects.get(pk=pk)
+    if request.method == 'POST' : 
+        # instacne=article을 안써주면 새로운 글을 만든다. 
+        form = ArticleForm(request.POST,instance=article)
+        if form.is_valid() :
+            article=form.save()
+            return redirect('articles:detail', article.pk) 
+    elif request.method == 'GET' :
+        # 기존 정보를 받아서 update.html을 표시하기 
+        form = ArticleForm(instance=article)
+    context = {
+        'article' : article,
+        'form': form
+    }
+    return render(request, 'articles/update.html', context)
+```
+
+- instance=article은 기존의 정보를 가져와서 화면에 표시해준다는 의미이다.
+- update를 할 때 기존 정보가 없으면 새로운 글을 작성한다. 
+
+POST를 if문 첫번째로 사용하는 이유는 POST는 DB와 관련이 있기 때문에 POST로 들어올 때만 DB에 접근하도록 하기 위해서이다 
+
+### Forms.py파일 위치
+
+- form class는 forms.py뿐만 아니라 다른 어느 위치에 두어도 상관 없다.
+- 하지만 일반적으로 app폴더/forms.py에 작성하는 것이 일반적이다. 
+
+### Form & Model Form 비교
+
+- Form
+  - 어떤 Model에 저장해야 하는지 알 수 없으므로 유효성 검사 이후 cleaned_data 딕셔너리 생성
+  - cleaned_data 딕셔너리에서 데이터를 가져온 후 .save()호출해야 함
+  - Model에 연관되지 않은 데이터를 받을 때 사용
+- ModelForm
+  - Django가 해당 model에서 양식에 필요한 대부분의 정보를 이미 정의
+  - 어떤 레코드를 만들어야할지 알고 있으므로 바로 .save()호출 가능 
+
+### Widgets 활용하기
+
+- Django의 HTML input element 표현
+- HTML 렌더링 처리
+- 2가지 작성방법이 있다.
+
+1. 메타 클래스 내부
+
+   권장하지 않음
+
+2. 메타 클래스 상위를 권장
+
+```python
+class ArticleForm(forms.ModelForm) :
+    # 장고 모델을 참고해서 form을 만들어줌 
+    
+    # input에 속성을 넣으려면 widget 내부 attribute에 작성을 해야한다.
+    title = forms.CharField(
+        widget=forms.TextInput(
+            # attributes
+            attrs = {
+                'class' : 'my-title',
+                'placeholder':'Enter the title',
+
+            }
+        )
+    )
+    class Meta :
+        model = Article
+        # 전체 필드 출력하는 __all__
+        fields = '__all__'
+        #exclude = ('title',)
+```
+
+![django-widget](django_form.assets/django-widget.PNG)
+
+```python
+class ArticleForm(forms.ModelForm) :
+    # 장고 모델을 참고해서 form을 만들어줌 
+    
+    # input에 속성을 넣으려면 widget 내부 attribute에 작성을 해야한다.
+    title = forms.CharField(
+        widget=forms.TextInput(
+            # attributes
+            attrs = {
+                'class' : 'my-title',
+                'placeholder':'Enter the title',
+
+            }
+        )
+    )
+    content = forms.CharField(
+        widget = forms.Textarea(
+            attrs={
+                'class' : 'my-content',
+                'placeholder' :'Enter the content',
+
+            }
+        ),
+        error_messages={
+            'required' : 'Please enter your content!!!!!',
+        }
+    )
+```
+
