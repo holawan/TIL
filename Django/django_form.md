@@ -125,3 +125,74 @@ class ArticleForm(forms.Form) :
 
 #### SELECT 만들기
 
+```python
+from django import forms
+
+class ArticleForm(forms.Form) :
+    REGION_A = 'sl'
+    REGION_B = 'dj'
+    REGION_C = 'bs'
+
+    REGIONS_CHOICES = [
+        (REGION_A, '서울'),
+        (REGION_B, '대전'),
+        (REGION_C, '광주')
+    ]
+
+    # Models.py와 유사한 구조 (form 클래스를 상속받음)
+    title = forms.CharField(max_length=10)
+    content = forms.CharField(widget=forms.Textarea)
+    # select 태그 만들기 
+    region = forms.ChoiceField(choices = REGIONS_CHOICES, widget = forms.Select())
+```
+
+
+
+### Model Form Intro
+
+- Django Form을 사용하다 보면 Model에 정의한 필드를 유저로부터 입려받기 위해 Form에서 Model 필드를 재정의하는 행위가 중복될 수 있음
+- 그래서 Django는 Model을 통해 Form Class를 만들 수 있는 Model Form이라는 helper를 제공
+
+### Model Form Class
+
+- Model을 통해 Form Class를 만드는 Helper
+- 일반 Form Class와 완전히 같은 방식(객체 생성)으로 view에서 사용 가능 
+
+```python
+#기존의 Form을 ModelForm으로 변경
+class ArticleForm(forms.ModelForm) :
+    class Meta :
+        model = Article
+        fields = '__all__'
+        #exclude = ('title',)
+```
+
+- forms 라이브러리에서 파생된 ModelForm 클래스를 상속받음
+- 정의한 클래스 안에 Meta 클래스를 선언하고, 어떤 모델을 기반으로 Form을 작성할 것인지에 대한 정보를 Meta 클래스에 저장
+- exclude는 필드가 여러가지일때 제외하고 싶은 필드가 있으면 exclude에 넣어서 제거한다. 
+- 주의사항은 fields와 exclude를 한 번에 쓸 수 는 없고 둘 중 하나만 써야한다. 
+
+#### Model Form 사용 이유
+
+- 모델로 만들어진 테이블 필드 속성에 맞는 HTML element를 만들어준다.
+- 이를 통해 받은 데이터를 view 함수에서 유효성 검사를 할 수 있도록 도와준다. 
+
+
+
+### Meta class 
+
+- Model의 정보를 작성하는 곳
+-  ModelForm을 사용할 경우 사용할 모델이 있어야 하는데 Meta Class가 이를 구성함
+  - 해당 Model에 정의한 field 정보를 Form에 적용하기 위함
+- Inner Class(Nested Class)
+  - 클래스 내부에 선언된 다른 클래스
+  - 관련 클래스를 함께 그룹하하여 가독성 및 프로그램 유지 관리를 지원 (논리적으로 묶어서 표현)
+  - 외부에서 내부 클래스에 접근할 수 없으므로 코드의 복잡성 줄임
+- META 데이터
+  - 데이터에 대한 데이터
+
+##### tip
+
+- 회원가입은 DB에 저장해야하니까 ModelForm 사용
+- 로그인은 정보만 받으면 되니까 Form 사용
+
