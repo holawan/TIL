@@ -380,3 +380,48 @@ class ArticleForm(forms.ModelForm) :
     )
 ```
 
+
+
+### Create Update html 합치기
+
+- request.resolver_match를 html 내부에 변수로 입력하면
+
+```django
+ResolverMatch(func=articles.views.create, args=(), kwargs={}, url_name=create, app_names=['articles'], namespaces=['articles'], route=articles/create/)
+```
+
+- 이렇게 매칭된 결과를 볼 수 있다.
+- Create와 update는 이전 데이터가 있으면서 그 인스턴스를 수정하는 것인지 새로 생성한는 것인지의 차이로 html이 거의 동일하게 구성되어 있다.
+- 따라서, form.html에 해당 html 두가지를 모두 구성할 수 있게 변경한다.
+
+- request.resolver_math.url_name을 통해 구분하도록 한다.
+
+```django
+{% block content %}
+{% comment %} url이 create이면  {% endcomment %}
+  {% if request.resolver_match.url_name == 'create' %}
+    <h1>CREATE</h1>
+  {% else %}
+  {% comment %} edit이면  {% endcomment %}
+    <h1>EDIT</h1>
+  {% endif %}
+  <hr>
+
+  <form action="" method="POST">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% comment %} {{form.as_p}} {% endcomment %}
+    <input type="submit">
+  </form>
+
+  {% if request.resolver_match.url_name == 'create' %}
+  {% comment %} url이 crate면 메인으로 가는 back 만들기 {% endcomment %}
+  <a href="{% url 'articles:index' %}">back</a>
+  {% else %}
+  <a href="{% url 'articles:index' %}">Home</a>
+  <a href="{% url 'articles:detail' article.pk %}">back</a>
+  {% endif %}
+{% endblock content %}
+
+```
+
