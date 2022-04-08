@@ -425,3 +425,145 @@ ResolverMatch(func=articles.views.create, args=(), kwargs={}, url_name=create, a
 
 ```
 
+## Handling HTTP requests
+
+### Django shortcut functions
+
+- django.shorcuts 패키지는 개발에 도움될 수 있는 여러 함수와 클래스를 제공
+- 종류
+  - render
+  - redirect
+  - get_object_or_404
+  - get_list_or_404
+- get_object_or_404()
+  - 모델 manager인 objects에서 get()을 호출하지만, 해당 객체가 없을 경우  DoesNotExist 예외 대신 Http404 raise
+  - get()에 경우 조건에 맞는 데이터가 없을 경우에 예외를 발생 시킴
+    - 코드 실행단계에서 발생한 예외 및 에러에 대해서 브라우저는 http status code 500으로 인식함
+  - 상황에 따라 적절한 예외처리를 하고 클라이언트에게 올바른 에러 상황을 전달하는 것 또한 개발의 중요한 요소 중 하나 
+
+- HTTP 응답 코드
+  - 4로 시작하면 클라이언트 에러 5로 시작하면 서버에러
+  - 404에러 : Page Not Found / 서버가 요청받은 리소스를 찾을 수 없다. 
+  - 403에러 : 클라이언트는 콘텐츠에 접근할 권리를 가지고 있지 않습니다. (CSRF token 넣지 않았을 때)
+  - 500에러 : 서버가 처리하는 방법을 모르는 상황이 발생했습니다. 서버는 처리 방법을 알 수 없습니다.
+- 존재하지 않은 객체를 조회할 때 500에러가 발생하는데, get_object_or_404를 이용하면 존재하지 않을 때는 404에러를 담아서 리턴한다. 
+- get_list_or_404()는 API로 서버를 운영할때 사용한다. 
+  - 영화를 조회했는데 영화정보가 없을 때
+
+### View decorators
+
+- Django는 다양한 HTTP 기능을 지원하기 위해 view함수에 적용할 수 있는 여러 데코레이터를 제공
+- 어떤 함수에 기능을 추가하고 싶을 때, 해당 함수를 수정하지 않고 기능을 연장 해주는 함수
+- 즉, 원본 함수를 수정하지 않으면서 추가 기능을 구현할 때 사용 
+- Allowed HTTP methods
+  - 요청 메소드에 따라 view 함수에 대한 엑세스를 제한 
+  - 요청이 조건을 충족시키지 못하면 HttpResponseNotAllowed을 return (405 Method Not Allowed)
+  - require_http_method(), require_POST(), require_safe(),
+- require_http_methods()
+  - view함수가 특정한 method 요청에 대해서만 허용하도록 하는 데코레이터
+- require_post()
+  - view함수가 POST method 요청만 승인하도록 하는 데코레이터
+- require_safe()
+  - view함수가 GET 및 HEAD method만 허용하도록 요구하는 데코레이터
+  - django는 require_GET 대신 require_safe를 사용하는 것을 권장 
+
+## Media File 
+
+- 미디어 파일
+- 사용자가 웹에서 업로드하는 정적 파일
+- 유저가 업로드 한 정적 파일
+
+### Model field
+
+- ImageField()
+
+  - 이미지 업로드에 사용하는 모델 필드
+  - FileField를 상속받는 서브 클래스이기 때문에 FileField의 모든 속성 및 메서드를 사용 가능하며, 더해서 사용자에 의해 업로드 된 객체가 유효한 이미지인지 검사함
+  - ImageField 인스턴스는 최대 길이가 100자인 문자열 DB에 생성되며, mex_length 인자를 사용하여 최대 길이를 변경할 수 있음
+  - 사용하려면 반드시 Pilow 라이브러리가 필요 
+
+  - 작성
+    - upload_to='images/' 
+      - 실제 이미지가 저장되는 경로를 지정
+    - blank=True 
+      - 선택적 업로드가 가능하게 하려고 이미지 필드에 빈 값이 허용되도록 설정 
+
+- FileField()
+  - 파일 업로드에 사용하는 모델 필드
+  - 2개의 선택 인자를 가지고 있음
+    - upload_to
+    - storage
+
+#### upload_to argument
+
+- 업로드 디렉토리의 파일 이름을 설정하는 2가지 방법을 제공
+  - 문자열 값이나 경로 지정
+  - 함수 호출
+
+- 문자열 경로 지정 방식
+  - 파이썬의 strftime()형식이 포함될 수 있으며, 이는 파일 업로드 날짜/시간으로 대체됨
+
+- 함수 호출방식
+  - 반드시 2개의 인자 (instance,filename) 사용함
+    - instance
+      - filefiled가 정의된 모델의 인스턴스
+      - 대부분 이 객체는 아직 데이터베이스에 저장되지 않았으므로 PK값이 아직 없을 수 있음
+    - filename
+      - 기존 파일에 제공된 파일 이름 
+
+### blank
+
+- 기본 값 :False
+- True인 경우 필드를 비워 둘 수 있음
+  - DB에는 ''(빈 문자열)이 저장됨
+- 유효성 검사에서 사용됨 (is_valid)
+  - 모델 필드에 blank=Ture를 작성하면 form 유효성 검사에서 빈 값을 입력할 수 있음
+
+### Null
+
+- 기본 값 :False
+- True인 경우 django는 빈 값에 대해 DB에 Null로 저장
+- 주의 사항
+  - charfield,textfield와 같은 문자열 기반 필드에는 사용하는 것을 피해야함
+  - 문자열 기반 필드에 True로 설정 시 '데이터 없음'에 '빈 문자열(1)'과 'NULL(2)'의 2가지 가능한 값이 있음을 의미하게 됨
+  - 대부분의 경우 '데이터 없음'에 대해 두 개의 가능한 값을 갖는 것은 중복되는 것이며, django는 null이 아닌 빈 문자열을 사용하는 것이 규칙 
+
+#### blank & null
+
+- blank
+  - validation-related
+- null
+  - database-related
+- 문자열 기반 및 비문자열 기반 모두에 대해  null option은 db에만 영향을 미치므로, form에서 빈 값을 허용하려면 blank = True를 설정해야함 
+
+### image field 사용의 단계
+
+- seetings.py에 MEDIA_ROOT , MEDIA_URL 설정
+- uplolad_to 속성을 정의하여 업로드 된 파일에 사용할 MEDIA_ROOT의 하위 경로를 지정 
+- 업로드 된 파일의 경로는 django가 제공하는 'url' 속성을 통해 얻을 수 있음 
+
+
+
+### MEDIA_ROOT
+
+- 사용자가 업로드 한 파일들을 보관할 디렉토리의 절대 경로
+- django는 성능을 위해 업로드 파일은 데이터베이스에 저장하지 ㅇ낳음
+  - 실제 데이터베이스에 저장되는 것은 파일의 경로
+- MEDIA_ROOT와 STATIC_ROOT는 다른 경로여야함 
+
+### MEDIA_URL
+
+- MEDIA_ROOT에서 제공되는 미디어를 처리하는 URL
+- 업로드 된 파일의 주소(URL)를 만들어 주는 역할
+  - 웹 서버 사용자가 사용하는 public URL
+- 비어 있지 않은 값으로 설정 한다면 반드시 slash(/)로 끝나야 함 
+- MEDIA_URL의 STATIC_URL과 반드시 다른 경로로 지정해야 함 
+
+
+
+#### 개발 단계에서 사용자가 업로드 한 파일 제공하기
+
+- settings.MEDIA_URL
+  - 업로드 된 파일의 URL
+- settings.MEDIA_ROOT 
+  - MEDIA_URL을 통해 참조하는 파일의 실제 위치
