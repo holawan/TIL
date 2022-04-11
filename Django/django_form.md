@@ -567,3 +567,62 @@ ResolverMatch(func=articles.views.create, args=(), kwargs={}, url_name=create, a
   - 업로드 된 파일의 URL
 - settings.MEDIA_ROOT 
   - MEDIA_URL을 통해 참조하는 파일의 실제 위치
+
+https://docs.djangoproject.com/ko/4.0/howto/static-files/
+
+```python
+#urls.py
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('articles/', include('articles.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
+
+
+#### 이미지 업로드 (CRAETE)
+
+- create.html에서 form에 enctype 속성 지정 
+
+```django
+  <form action="" method="POST" enctype="multipart/form-data">
+```
+
+- form 태그 - enctype(인코딩)속성
+  - multipart/form-data
+    - 파일 이미지 업로드 시에 반드시 사용해야함 (전송되는 데이터의 형식을 지정)
+    - \<input type="file">을 사용할 경우에 사용 
+
+### 이미지 수정하기
+
+- 이미지는 바이너리 데이터이기 때문에 텍스트처럼 일부만 수정 하는 것은 불가능
+- 때문에 새로운 사진으로 덮어씌우는 방식을 사용 
+
+#### 이미지 크기 변경하기
+
+- 실제 원본 이미지를 서버에 그대로 업로드 하는 것은 서버의 부담이 큰 작업
+- <img>태그에서 직접 사이즈를 조정할 수도 있지만, 업로들 될 때 이미지 자체를 resizing 하는 것을 고려하기 
+- django imagekit 사용 
+
+https://github.com/matthewwithanm/django-imagekit
+
+```python
+#models.py
+from django.db import models
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
+
+class Profile(models.Model):
+        image = ProcessedImageField(
+        blank=True,
+        upload_to='thumbnails/',
+        processors=[Thumbnail(200, 300)],
+        format='JPEG',
+        options={'quality': 60})
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+```
+
