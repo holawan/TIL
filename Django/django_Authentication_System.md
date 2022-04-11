@@ -202,5 +202,50 @@ def logout(request):
 
 - 사용자가 로그인되어 있지 않으면, settings.LOGIN_URL에 설정된 문자열 기반 절대 경로로 redirect 함 
   - LOGIN_URL의 기본 값은 '/accounts/login'
+  
 - 사용자가 로그인되어 있으면 정상적으로 view 함수를 실행
+
 - 인증 성공 시 사용자가 redirect 되어야하는 경로는 'next'라는 쿼리 문자열 매개 변수에 저장됨 
+
+  - view 함수에 login_required 데코레이터 작성
+
+  - 비로그인 상태에서 account/create 경로로 요청 보내기
+
+### 로그인 사용자에 대한 접근 제한
+
+- 'next' query string parameter
+  - 로그인이 정상적으로 진행되면 기존에 요청했던 주소로 redirect하기 위해 주소를 keep 해주는 것
+  - 단, 별도로 처리해주지 않으면 우리가 view에서 설정한 redirect 경로로 이동하게 됨 
+
+- action을 비워줘야 적용됨
+
+#### 두 데코레이터로 인해 발생하는 구조적 문제와 해결
+
+- 비로그인 상태에서 게시글 삭제 시도 
+  - 405에러 리턴
+- @require_POST 작성된 함수에 @login_required를 함께 사용하는 경우 에러 발생
+- 로그인 이후 'next' 매개 변수를 따라 해당 함수로 다시 redirect되는데, 이때 get 방식으로 데이터가 전송되서 @require_POST 때문에 405 에러가 발생함
+- 두가지 문제 발생
+  - redirect 과정에서 POST 데이터 손실
+  - redirect 요청은 POST 방식이 불가능하기 때문에 GET방식으로 요청함 
+
+![login_post_error](django_Authentication_System.assets/login_post_error.PNG)
+
+- login_required는 GET method request를 처리할 수 있는 view함수에서만 사용해야함
+
+<hr>
+
+### 회원가입
+
+#### USERCreationForm
+
+- 주어진 username과 password로 권한이 없는 새 user를 생성하는 ModelForm
+- 3가지 필드를 가짐
+  - username
+  - password
+  - password 확인 
+
+```python
+
+```
+
