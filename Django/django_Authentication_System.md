@@ -246,6 +246,52 @@ def logout(request):
   - password 확인 
 
 ```python
+@require_http_methods(['GET','POST'])
+def signup(request) :
+    if request.user_is_authenticated:
+        return redirect('articles:index')
+    if request.method == 'POST' :
+        form=UserCreationForm(request.POST)
+        if form.is_valid() :
+            user = form.save()
+            auth_login(request,user)
+            return redirect('articles:index')
+    else :
+        form = UserCreationForm()
+        
+    context = {
+        'form' :form,
+    }
+    return render(request, 'accounts/signup.html',context)
 
 ```
 
+### 회원정보 수정
+
+#### UserChangeForm
+
+- 사용자의 정보 및 권한을 변경하기 위해 admin 인터페이스에서 사용되는 ModelForm
+
+##### 문제점
+
+- 일반 사용자가 접근해서는 안될 정보들까지 모두 수정이 가능해짐
+- 따라서 UserChangeForm을 상속받아 CustomUserChangeForm이라는 서브클래스를 작성해 접근 가능한 필드를 조정해야함 
+
+#### get_user_model()
+
+- 현재 프로젝트에서 활성화된 사용자 모델을 반환
+- Django는 User클래스를 직접 참조하는 대신 django.contrib.auth.get_user_model()을 사용하여 참조해야 한다고 강조
+
+#### PasswordChangeForm
+
+- 사용자가 비밀번호를 변경할 수 있도록 하는 Form
+- 이전 비밀번호를 입력하여 비밀번호를 변경할 수 있도록 함
+- 이전 비밀번호를 입력하지 않고 비밀번호를 설정할 수 있는 SetPasswordForm을 상속받는 서브클래스 
+
+#### 암호 변경시 세션 무효화 방지
+
+- update_session_auth_hash(request,user)
+
+- 현재요청과 새 session hash가 파생될 업데이트 된 사용자 객체를 가져오고, session hash를 적절하게 업데이트
+- 비밀번호가 변경되면 기존 세션과 회원 인증 정보가 일치하지 않게 되어 로그인 상태를 유지할 수 없기 때문
+- 암호가 변경되어도 로그아웃되지 않도록 새로운 password hash로 session을 업데이트함 
