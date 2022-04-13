@@ -626,3 +626,62 @@ class Profile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 ```
 
+### Comment
+
+#### Comment CREATE
+
+#### THe 'save()' method
+
+- save(commit=False)
+  - Create, but don't save the new instance.
+  - 아직 데이터베이스에 저장되지 않은 인스턴스를 반환
+  - 저장하기 전에 객체에 대한 사용자 지정 처리를 수행할 때 유용하게 사용 
+
+```python
+@require_POST
+def comments_create(request,pk) :
+    article = Article.objects.get(pk=pk)
+    comment_form = CommentForm(request.POST)
+    if comment_form.is_valid() :
+        # commit의 기본값은 true이다. commit을 False로 바꿔서 DB에 저장은 안하고 인스턴스는 만들어줌 
+        comment = comment_form.save(commit=False)
+        # 누락된 article입력 해주고 
+        comment.article = article
+        #세이브 해줌 
+        comment.save()
+    return redirect('articles:detail',article.pk)
+```
+
+#### Comment READ
+
+```python
+@require_safe
+def detail(request, pk):
+    # article = Article.objects.get(pk=pk)
+    # 객체가 있으면 객체를 없으면 404에러를 담아서 반환 
+    article = get_object_or_404(Article,pk=pk)
+    comment_form = CommentForm()
+    # 조회한 article에 모든 댓글을 조회 
+    comments = article.comment_set.all()
+    context = {
+        'article': article,
+        'comment_form' : comment_form,
+        'comments' : comments
+    }
+    return render(request, 'articles/detail.html', context)
+```
+
+#### Commnet DELETE
+
+```python
+#urls.py
+path('<int:article_pk>/comments/<int:comment_pk>/delete/',views.comments_delete,
+    name='comments_delete')
+#views.py
+def comments_delete(request,article_pk,comment_pk) :
+    comment = Comment.objects.get(pk=comment_pk)
+    # article_pk = comment.article.pk
+    comment.delete()
+    return redirect('articles:detail',article_pk)
+```
+

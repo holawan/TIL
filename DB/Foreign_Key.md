@@ -70,3 +70,46 @@ class Comment(models.Model) :
 
 - 만약 ForeignKey 인스턴스를 abcd로 생성하면 abcd_id로 만들어짐
 - 하지만 명시적인 모델 관계 파악을 위해 참조하는 클래스 이름의 소문자(단수형)으로 작성하는 것이 바람직함(1:N)
+
+### 1:N 관계 related manager
+
+#### 역참조('commet_set')
+
+- Article(1) -> Comment(N)
+- article.comment 형태로는 사용할 수 없고 article.commetn_set manager가 생성됨
+- 게시글에 몇 개의 댓글이 작성되었는지 Django ORM이 보장할 수 없기 때문
+  - article은 comment가 있을 수도 있고, 없을 수도 있음
+  - 실제로 Article 클래스에는 Comment와 어떠한 관계도 작성되어 있지 않음
+
+#### 참조 ('article')
+
+- Comment(N) -> Article(1)
+- 댓글의 경우 어떠한 댓글이든 반드시 자신이 참조하고 있는 게시글이 있으므로, comment.article과 같이 접근할 수 있음
+- 실제 ForeignKeyField 또한 Comment 클래스에서 작성됨 
+
+```sqlite
+article.comment_set.all()
+Out[4]: <QuerySet [<Comment: first comment>, <Comment: second comment>]>
+
+In [8]: comments = article.comment_set.all()
+
+In [9]: for comment in comments :
+   ...:     print(comment.content)
+   ...: 
+first comment
+second comment
+
+```
+
+##### Foreign_key argumetns  - 'related_name'
+
+article.commet_set.all() -> 1:N관계에서의 조회
+
+article.comments.all() -> M:N 관계에서 조회 하는 것을 권장 
+
+```python
+article = models.ForeignKey(Article, on_delete=models.CASCADE,related_name='comments')
+```
+
+- 위와 같이 변경하면 article.commetn_set은 더이상 사용할 수 없고 article.comments로 대체됨
+- 역참조시 사용할 이름 수정 후 migration 필수 
