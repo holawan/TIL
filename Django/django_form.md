@@ -196,6 +196,8 @@ class ArticleForm(forms.ModelForm) :
 - 회원가입은 DB에 저장해야하니까 ModelForm 사용
 - 로그인은 정보만 받으면 되니까 Form 사용
 
+
+
 ### Create 수정
 
 ```python
