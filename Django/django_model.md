@@ -69,3 +69,144 @@
 
 
 #### ORM 사용 이유 : DB를 객체로 조작하하기 위함
+
+
+
+
+
+### Migrations
+
+- Django가 model에 생긴 변화를 반영하는 방법
+
+#### Migrations Commands
+
+- Migration 실행 및 DB 스키마를 다루기 위한 몇가지 명령어
+- makemigrations
+  - model을 변경한 것에 기반한 새로운 마이그레이션(설계도)를 만들 때 사용
+- migrate
+  - 마이그레이션을 DB에 반영하기 위해 사용
+  - 설계도를 실제 DB에 반영하는 과정
+  - 모델에서의 변경 사항들과 DB의 스키마가 동기화를 이룸
+- sqlmigrate
+  - 마이그레이션에 대한 SQL 구문을 보기 위해 사용 
+  - 마이그레이션이 SQL 문으로 어떻게 해석되어서 동작할지 미리 확인할 수 있음
+- showmigrations
+  - 프로젝트 전체의 마이그레이션 상태를 확인하기 위해 사용
+  - 마이그레이션 파일들이 migrate 됐는지 안됐는지 여부를 확인할 수 있음
+
+### Migration 해보기 
+
+#### models.py 작성
+
+```python
+class Movie(models.Model) :
+    title = models.CharField(max_length=10)
+    description = models.TextField()
+```
+
+- 각 모델은 django.models.Model 클래스의 서브 클래스로 표현됨
+  - django.db.models 모듈의 Model 클래스를 상속받음
+- model 모듈을 통해 어떠한 타입의 DB 컬럼을 정의할 것인지 정의
+  - title과 content는 모델의 필드를 나타냄
+  - 각 필드는 클래스 속성으로 지정되어 있으며, 각 속성은 각 데이터베이스의 열에 매핑
+
+#### 모델 필드
+
+- CharField (max_length = None, **options)
+
+  - 길이의 제한이 있는 문자열을 넣을 때 사용
+  - CharField의 max_length는 필수 인자
+  - 필드의 최대 길이(문자), 데이터베이스 레벨과 Django의 유효성 검사에서 활용
+
+- TextField(**options)
+
+  - 글자의 수가 많을 때 사용
+  - max_length 옵션 작성 시 자동 양식 필드인 textarea 위젯에 반영은 되지만 모델과 데이터베이스 수준에는 적용되지 않음
+    - max_length 사용은 CharField에서 사용해야함
+
+- DateFields
+
+  - auto_now_add
+
+    - 최초 생성 일자
+    - Django ORM이 최초 insert시에만 현재 날짜와 시간으로 갱신(테이블에 어떤 값을 최초로 넣을 때)
+
+  - auto_now
+
+    - 최종 수정 일자
+
+    - Django ORM이 save를 할 때마다 현재 날짜와 시간으로 갱신 
+
+```
+$ python manage.py makemigrations
+```
+
+- 'migrations/0001_initial.py' 생성 확인
+
+```
+$ python manage.py migrate
+```
+
+- 0001_initial.py 설계도를 실제 DB에 반영
+
+- 실제 DB table 확인을 위해 sqlite3 확인
+
+![sqltable](django_model.assets/sqltable.PNG)
+
+```
+$ python manage.py sqlmigrate app_name 0001
+```
+
+- 해당 migrations 설계도가 SQL 문으로 어떻게 해석되어서 동작할지 미리 확인 할 수 있음
+
+```
+BEGIN;
+--
+-- Create model Movie
+--
+CREATE TABLE "movies_movie" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "title" varchar(20) NOT NULL, "description" text NOT NULL, "user_id" bigint NOT NULL REFERENCES "accounts_user" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model Comment
+```
+
+##### showmigrations
+
+```
+python manage.py showmigrations
+```
+
+- migrations 설계도들이 migrate 됐는지 안됐는지 여부를 확인 할 수 있음
+
+![show_migration결과](django_model.assets/show_migration결과.PNG)
+
+
+
+### Database API
+
+- DB를 조작하기 위한 도구
+- Django가 기본적으로 ORM을 제공함에 따른 것으로 DB를 편하게 조작할 수 있도록 도움
+- Model을 만들면 Django는 객체들을 만들고 읽고 수정하고 지울 수 있는 database-abstract API를 자동으로 만듬
+- database-abstract API 혹은 database-access API라고도 함 
+
+#### DB API 구문 - Making Queries
+
+- ex) Article은 Class명, objects는 Manager, all()은 QuerySet API
+
+```python
+Article.Objects.all()
+```
+
+- Manager
+  - Django 모델에 데이터베이스 Query 작업이 제공되는 인터페이스
+  - 기본적으로 모든 Django 모델 클래스에 objects라는 Manager를 추가
+- QuerySet
+  - 데이터베이스로부터 전달받은 객체 목록
+  - queryset 안의 객체는 0개, 1개 혹은 여러 개일 수 있음
+  - 데이터베이스로부터 조회, 필터, 정렬 등을 수행 할 수 있음
+
+#### Django shell
+
+- 일반 Python shell을 통해서는 장고 프로젝트 환경에 접근할 수 없음
+- 그래서 장고 프로젝트설정이 load된 Python shell을 활용해 DB API구문 테스트 진행
+- 기본 Django shell보다 더 많은 기능을 제공하는 Shell_plus를 사용해서 진행 
+  - django-extension 설치 필요 
