@@ -210,3 +210,18 @@ Article.Objects.all()
 - 그래서 장고 프로젝트설정이 load된 Python shell을 활용해 DB API구문 테스트 진행
 - 기본 Django shell보다 더 많은 기능을 제공하는 Shell_plus를 사용해서 진행 
   - django-extension 설치 필요 
+
+#### 라이브러리 설치
+
+```
+$ pip install ipython
+$ pip install django-extensions
+```
+
+INSTALLED_APPS에 추가
+
+shell_plus 실행
+
+```
+$python manage.py shell_plus
+```
