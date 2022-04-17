@@ -195,6 +195,10 @@ FROM examples2;
 
 ![sqlite4](Database.assets/sqlite4.PNG)
 
+
+
+### CRUD
+
 #### 테이블 생성 및 삭제
 
 - CREATE TABLE
@@ -384,3 +388,212 @@ WHERE rowid = 5;
 |  U   | UPDATE |    UPDATE 테이블이름 SET 컬럼1=값1, 컬럼2=값2 WHERE 조건;    |
 |  D   | DELETE |              DELETE FROM 테이블이름 WHERE 조건;              |
 
+
+
+## SQLite Aggregate Functions
+
+- 집계함수
+- 값 집합에 대한 계산을 수행하고 단일 값을 반환
+  - 여러 행으로부터 하나의 결과값을 반환하는 함수
+- SELECT 구문에서만 사용됨
+- 예시
+  - 테이블 전체 행 수를 구하는 COUNT(*)
+  - age 컬럼 전체 평균 값을 구하는 AVG(age)
+
+#### Overview of SQLite aggregate functions
+
+- COUNT 
+  - 그룹의 항목 수를 가져옴 
+
+```sqlite
+SELECT COUNT(*) FROM users;
+```
+
+- AVG
+  - 모든 값의 평균을 계산
+
+- MAX
+  - 그룹에 있는 모든 값의 최대값을 가져옴
+- MIN
+  - 그룹에 있는 모든 값의 최소값을 가져옴 
+
+- SUM 
+  - 모든 값의 합을 계산
+
+```sqlite
+SELECT AVG(컬럼) FROM 테이블이름;
+SELECT SUM(컬럼) FROM 테이블이름;
+SELECT MIN(컬럼) FROM 테이블이름;
+SELECT MAX(컬럼) FROM 테이블이름;
+```
+
+위 함수들은 기본적으로 해당 컬럼이 숫자(INTEGER)일 때만 사용 가능 
+
+- 30살 이상인 사람들의 평균 나이는?
+
+```sqlite
+SELECT AVG(age) FROM users WHERE age>=30;
+```
+
+- 계좌 잔액이 가장 높은 사람과 그 액수를 조회하려면? 
+
+```sqlite
+SELECT first_name, MAX(balance) FROM users;
+```
+
+- 나이가 30이상인 사람의 계좌 평균 잔액을 조회하려면?
+
+```sqlite
+SELECT AVG(balance) FROM users WHERE age>=30;
+```
+
+
+
+### LIKE
+
+- "query data based on pattern matching"
+- 패턴 일치를 기반으로 데이터를 조회하는 방법
+- SQLite는 패턴 구성을 위한 2개의 wildcards를 제공
+  - %(percentsign)
+    - 0개 이상의 문자 
+  - _(underscore)
+    - 임의의 단일 문자 
+
+#### wildcard character
+
+- 파일을 지정할 때, 구체적인 이름 대신에 여러 파일을 동시에 지정할 목적으로 사용하는 특수 기호
+  - *, ? 등 
+- 주로 특정한 패턴이 있는 문자열 혹은 파일을 찾거나, 긴 이름을 생략할 때 쓰임
+- 텍스트 값에서 알 수 없는 문자를 사용할 수 있는 특수 문자로, 유사하지만 동일한 데이터가 아닌 여러 항목을 찾기에 매우 편리한 문자
+- 지정된 패턴 일치를 기반으로 데이터를 수집하는데도 도움이 될 수 있음
+
+```sqlite
+SELECT * FROM 테이블 WHERE 컬럼 LIKE '와일드카드패턴';
+```
+
+- %
+  - 이 자리에 문자열이 있을 수도, 없을 수도 있다.
+- _
+  - 반드시 이 자리에 한개의 문자가 존재해야 한다.
+
+#### 사용예시
+
+| 와일드카드패턴   | 의미                                          |
+| ---------------- | --------------------------------------------- |
+| 2%               | 2로 시작하는 값                               |
+| %2               | 2로 끝나는 값                                 |
+| %2%              | 2가 들어가는 값                               |
+| _2%              | 아무 값이 하나 있고 두 번째가 2로 시작하는 값 |
+| 1____            | 1로 시작하고 총 4자리인 값                    |
+| `2_%_%` /` 2__%` | 2로 시작하고 적어도 3자리인 값                |
+
+- users 테이블에서 나이가 20대인 사람만 조회
+
+```sqlite
+SELECT * FROM users WHERE age LIKE '2_'
+```
+
+- users 테이블에서 지역 번호가 02인 사람만 조회
+
+```sqlite
+SELECT * FROM users WHERE phone LIKE '02-%'
+```
+
+- users 테이블에서 이름이 '준'으로 끝나는 사람만 조회
+
+```sqlite
+SELECT * FROM users WHERE first_name LIKE '%준';
+```
+
+- users 테이블에서 중간 번호가 5114인 사람과 조회한다면?
+
+```sqlite
+SELECT * FROM users WHERE phone LIKE '%-5114-%'
+```
+
+
+
+### ORDER BY 
+
+- "sort a result set of a query"
+- 조회 결과 집합을 정렬
+- SELECT 문에 추가하여 사용
+- 정렬 순서를 위한 2개의 keyword 제공
+  - ASC - 오름차순(default)
+  - DESC - 내림차순
+
+- users에서 나이 순으로 오름차순 정렬하여 상위 10개만 조회하기
+
+```sqlite
+SELECT * FROM users ORDER BY age ASC LIMIT 10;
+```
+
+- users에서 나이 순, 성순으로 오름차순 정렬하여 상위 10개만 조회하기
+
+```sqlite
+SELECT * FROM users ORDER BY age,last_name ASC LIMIT 10;
+```
+
+
+
+### GROUP BY
+
+- "make a set of summary rows from a set of rows"
+- 행 집합에서 요약 행 집합을 만듬
+- SELECT 문의 optional 절
+- 선택된 행 그룹을 하나 이상의 열 값으로 요약 행으로 만듬
+- 문장에 WHERE 절이 포함된 경우 반드시 WHERE 절 뒤에 작성해야함 
+
+- 지정된 기준에 따라 행 세트를 그룹으로 결합
+- 데이터를 요약하는 상황에 주로 사용
+
+```sqlite
+SELECT 컬럼1, aggregate_function(컬럼2) FROM 테이블 GROUP BY 컬럼1, 컬럼2; 
+```
+
+- users에서 각 성씨가 몇 명씩 있는지 조회한다면?
+
+```sqlite
+SELECT last_name, COUNT(*) FROM users GROUP BY last_nmae;
+```
+
+- AS를 활용해서 COUNT에 해당하는 컬럼 명을 바꿔서 조회할 수 있음 
+
+```sqlite
+SELECT last_name, COUNT(*) AS name_count FROM users GROUP BY last_name;
+```
+
+
+
+### ALTERTABLE
+
+#### ARTER TABLE의 3가지 기능
+
+- table 이름 변경
+
+  - ```sqlite
+    ALTER TABLE 기존테이블이름 RENAME TO 새로운테이블이름;
+    ```
+
+- 테이블에 새로운 column 추가
+
+  - ```sqlite
+    ALTER TABLE 테이블이름 ADD COLUMN 컬럼이름 데이터타입설정;
+    ```
+
+  - ```sqlite
+    ALTER TABLE news ADD COLUMN created_at TEXT NOT NULL;
+    ```
+
+- [참고] column 이름 수정 (new in sqlite 3.25.0)
+
+  - ```sqlite
+     ALTER TABLE table_name RENAME COLUMN current_name TO new_name;
+    ```
+
+##### 주의
+
+- ALTER TABLE에 새로 컬럼을 추가할 때 기존에 데이터들이 있기 때문에 에러가 발생
+- 해결방법
+  - NOT NULL 설정 없이 추가하기
+  - 기본값 설정하기 
