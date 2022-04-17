@@ -197,3 +197,136 @@ https://docs.djangoproject.com/ko/4.0/ref/models/querysets/#queryset-api-referen
 
 
 
+## CRUD with views
+
+### READ
+
+- url 설정
+
+```python
+app_name = 'articles'
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+```
+
+- view 함수 작성
+
+```python
+def index(request):
+    # 전체 게시글 조회(오름차순)
+    # articles = Article.objects.all()
+
+    # 전체 게시글 조회(내림차순 1, python으로 조작)
+    # articles = Article.objects.all()[::-1]
+    
+    # 전체 게시글 조회(내림차순 2, DB가 조작)
+    articles = Article.objects.order_by('-pk')
+
+    # 조회해서 할당한 쿼리셋 데이터를 context로 넘김
+    context = {
+        'articles': articles,
+    }
+    return render(request, 'articles/index.html', context)
+```
+
+- templates 작성
+
+```django
+{% block content %}
+  <h1>Articles</h1>
+  <a href="{% url 'articles:new' %}">NEW</a>
+  <hr>
+  {% for article in articles %}
+    <p>글 번호: {{ article.pk }}</p>  
+    <p>글 제목: {{ article.title }}</p>
+    <p>글 내용: {{ article.content }}</p>
+    <a href="{% url 'articles:detail' article.pk %}">DETAIL</a>
+    <hr>
+  {% endfor %}
+{% endblock content %}
+```
+
+- 결과 확인 
+
+```shell
+python manage.py runserver
+```
+
+![indexhtml](django_crud.assets/indexhtml.PNG)
+
+### CREATE
+
+- url 설정
+
+```python
+app_name = 'articles'
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('new/', views.new, name='new'),
+    path('create/', views.create, name='create'),
+]
+```
+
+- view 함수 작성
+
+```python
+def new(request):
+    return render(request, 'articles/new.html')
+
+
+def create(request):
+    title = request.POST.get('title')
+    content = request.POST.get('content')
+
+    # 1
+    # article = Article()
+    # article.title = title
+    # article.content = content
+    # article.save()
+
+    # 2
+    article = Article(title=title, content=content)
+    article.save()
+
+    # 3
+    # Article.objects.create(title=title, content=content)
+
+    # return redirect('/articles/')
+    return redirect('articles:detail', article.pk)
+```
+
+- templates 작성
+
+```django
+#new.html
+{% extends 'base.html' %}
+
+
+{% block content %}
+  <h1>NEW</h1>
+  <hr>
+  <form action="{% url 'articles:create' %}" method="POST">
+    {% csrf_token %}
+    <label for="title">Title: </label>
+    <input type="text" id="title" name="title"><br>
+    <label for="content">Content: </label>
+    <textarea name="content" id="content" cols="30" rows="10"></textarea>
+    <input type="submit">
+  </form>
+{% endblock content %}
+
+#create.html
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>성공적으로 글이 작성되었습니다.</h1>
+{% endblock content %}
+
+```
+
+- 결과 확인 
+
+![create](django_crud.assets/create.PNG)
+
+![create2](django_crud.assets/create2.PNG)
