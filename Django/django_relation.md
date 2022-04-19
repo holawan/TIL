@@ -160,3 +160,95 @@ urlpatterns = [
 
 #### View
 
+```python
+def profile(request,username) :
+    person = get_object_or_404(get_user_model(),username=username)
+    context = {
+        'person' : person,
+    }
+    return render(request, 'accounts/profile.html',context)
+```
+
+#### templates
+
+```django
+  <h1>{{ person.username}}님의 프로필</h1>
+  <hr>
+
+  {% comment %} 작성한 게시글 {% endcomment %}
+  <h2>{{person.username}}이 작성한 게시글</h2>
+
+  {% for article in person.article_set.all  %}
+    <p>{{article.title}}</p>
+  {% endfor %}
+
+  {% comment %} 작성한 댓글 {% endcomment %}
+  <h2>{{person.username}}이 작성한 댓글</h2>
+  {% for comment in person.comment_set.all %}
+    <p>{{comment.content}}</p>
+  
+  {% endfor %}
+  {% comment %} 좋아요를 누른 게시물  {% endcomment %}
+  <h2>{{person.username}}이 좋아요를 누른 게시글</h2>
+  {% for article in person.like_articles.all %}
+    <p>{{article.title}}</p>
+  {% endfor %}
+```
+
+
+
+### Follow
+
+- ManyToManyField 작성 후 마이그레이션(user간 팔로우이기 때문에 자기 자신을 참조 )
+
+```python
+class User(AbstractUser) :
+    followings = models.ManyToManyField('self', symmetrical=False, related_name='followers')
+```
+
+#### Symmetrical
+
+- ManyToManyField가 동일한 모델(on self)를 가리키는 정의에서만 사용
+- symmetrical=True(기본값)일 경우 Django는 person_set 매니저를 추가하지 않음(True이면 1번이 2번에게 follow를 했을 때 2번도 1번을 자동으로 follow하게 됨 )
+- source 모델의 인스턴스가 target 모델의 인스턴스를 참조하면, target 모델 인스턴스도 source 모델 인스턴스를 자동으로 참조하도록 함
+  - 즉, 내가 당신 친구라면 당신도 내 친구
+  - 대칭을 원하지 않는 경우 False로 설정
+
+#### 필드 확인
+
+![followfield](django_relation.assets/followfield.PNG)
+
+#### View
+
+```python
+def follow(request,user_pk) :
+
+    me = request.user
+    you = get_object_or_404(get_user_model(),pk=user_pk)
+    if me!=you :
+        if request.user in you.followers.all() :
+            you.followers.remove(me)
+        else :
+            you.followers.add(me)
+    return redirect('accounts:profile', you.username)
+```
+
+
+
+#### html
+
+```django
+#profile.html
+    {% if user != person %}
+      <form action="{% url 'accounts:follow' person.pk %}" method="POST">
+        {% csrf_token %}
+        {% if user in person.followers.all %}
+          <input type="submit" value="언팔">
+        {% else %}
+          <input type="submit" value="팔로우">
+        {% endif %}
+
+      </form>
+    {% endif %}
+```
+
