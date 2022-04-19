@@ -216,8 +216,32 @@ def logout(request):
 - 'next' query string parameter
   - 로그인이 정상적으로 진행되면 기존에 요청했던 주소로 redirect하기 위해 주소를 keep 해주는 것
   - 단, 별도로 처리해주지 않으면 우리가 view에서 설정한 redirect 경로로 이동하게 됨 
-
 - action을 비워줘야 적용됨
+
+```python
+@require_POST
+def likes(request, article_pk):
+    if request.user.is_authenticated:
+        article = get_object_or_404(Article, pk=article_pk)
+        if article.like_users.filter(pk=request.user.pk).exists():
+                article.like_users.remove(request.user)
+        else:
+            article.like_users.add(request.user) 
+        
+        if request.GET.get('next') :
+            return redirect(request.GET.get('next') )
+        return redirect('articles:index')
+    return redirect('accounts:login')
+```
+
+```django
+{% url 'articles:likes' article.pk %}?next=/accounts/{{person.username}}
+```
+
+- 위의 방식으로 next 파라미터를 줄 수 있다.
+  - likes를 profile과 index에서 누를 수 있는데, 
+    -  누르면 원래 view함수에서 articles:index를 리턴한다.
+    - 하지만 profile에서 좋아요를 누르면 index로 가면 안되기 때문에 따로 next파라미터를 줘서, 해당 next 파라미터로 redirect하게 한다. 
 
 #### 두 데코레이터로 인해 발생하는 구조적 문제와 해결
 
@@ -295,5 +319,4 @@ def signup(request) :
 - 현재요청과 새 session hash가 파생될 업데이트 된 사용자 객체를 가져오고, session hash를 적절하게 업데이트
 - 비밀번호가 변경되면 기존 세션과 회원 인증 정보가 일치하지 않게 되어 로그인 상태를 유지할 수 없기 때문
 - 암호가 변경되어도 로그아웃되지 않도록 새로운 password hash로 session을 업데이트함 
-
 
