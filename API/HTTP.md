@@ -1,6 +1,6 @@
-## REST API
+## HTTP
 
-### HTTP
+### 개념 
 
 - Hyper Text Transfer Protocol
 - 웹 상에서 컨텐츠를 전송하기 위한 약속
@@ -15,7 +15,7 @@
 
 - 쿠키와 세션을 통해 서버 상태를 요청과 연결하도록 함 
 
-##### HTTP 메시지
+#### HTTP 메시지
 
 - 응답
 
@@ -77,43 +77,26 @@
 #### URI의 구조 
 
 - Schema (protocol)
-
   -  브라우저가 사용해야 하는 프로토콜
   - http(s), data, file, ftp, mailto
-
 - Host (Domain name)
-
   - 요청을 받는 웹 서버의 이름
   - IP adress를 직접 사용할 수도 있지만, 실 사용시 불편하므로 웹에서 그리 자주 사용되지는 않음
     - google의 IP adress - 142.251.42.142
-
 - Port
-
   - 웹 서버 상의 리소스에 접근하는데 사용되는 기술적인 '문(gate)'
   - HTTP 프로토콜의 표준 포트
     - HTTP 80
     - HTTPS 443
-
 - Path
-
   - 웹 서버 상의 리소스 경로
   - 초기에는 실제 파일이 위치한 물리적 위치를 나타냈지만, 오늘날은 물리적인 실제 위치가 아닌 추상화 형태의 구조로 표현 
-
 - Query (Identifier)
-
   - Query String Parameters
   - 웹 서버에 제공되는 추가적인 매개 변수
   - &로 구분되는 key-value 목록
-
 - Fragment
-
   - Ancor
   - 자원 안에서의 북마크의 한 종류를 나타냄
   - 브라우저에게 해당 문서(HTML)의 특정 부분을 보여주기 위한 방법
   - 브라우저에게 알려주는 요소이기 때문에 fragment identifier(부분 식별자)라고 부르며, '#' 뒤의 부분은 요청이 서버에 보내지지 않음
-
-  
-
-### Restful API
-
-- 
