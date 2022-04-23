@@ -40,6 +40,14 @@ $ python manage.py dumpdata --indent 4 accounts.user > user.json
 $ python manage.py dumpdata --indent 4 accounts.user > user.json
 ```
 
+- utf-8로 인코딩 하는 방법
+
+```shell
+python -Xutf8 manage.py dumpdata --indent 4 movies.movie > movie.json
+```
+
+
+
 - 생성 데이터 확인
 
 ![fixturs_1](Fixures.assets/fixturs_1.PNG)
