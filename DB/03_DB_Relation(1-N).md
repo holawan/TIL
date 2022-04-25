@@ -28,4 +28,3 @@ user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
   - 현재 화면에서 기본값을 설정하겠다라는 의미
 - 1을 입력 후 enter
   - 기존 테이블에 추가되는 user_id필드의 값을 1로 설정하겠다는 의미
-

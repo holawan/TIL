@@ -117,25 +117,23 @@ class Movie(models.Model) :
   - 길이의 제한이 있는 문자열을 넣을 때 사용
   - CharField의 max_length는 필수 인자
   - 필드의 최대 길이(문자), 데이터베이스 레벨과 Django의 유효성 검사에서 활용
-
 - TextField(**options)
 
   - 글자의 수가 많을 때 사용
   - max_length 옵션 작성 시 자동 양식 필드인 textarea 위젯에 반영은 되지만 모델과 데이터베이스 수준에는 적용되지 않음
     - max_length 사용은 CharField에서 사용해야함
-
 - DateFields
 
   - auto_now_add
 
     - 최초 생성 일자
     - Django ORM이 최초 insert시에만 현재 날짜와 시간으로 갱신(테이블에 어떤 값을 최초로 넣을 때)
-
   - auto_now
-
+  
     - 최종 수정 일자
+  - Django ORM이 save를 할 때마다 현재 날짜와 시간으로 갱신 
 
-    - Django ORM이 save를 할 때마다 현재 날짜와 시간으로 갱신 
+### Migrations
 
 ```
 $ python manage.py makemigrations
@@ -180,114 +178,3 @@ python manage.py showmigrations
 ![show_migration결과](django_model.assets/show_migration결과.PNG)
 
 
-
-### Database API
-
-- DB를 조작하기 위한 도구
-- Django가 기본적으로 ORM을 제공함에 따른 것으로 DB를 편하게 조작할 수 있도록 도움
-- Model을 만들면 Django는 객체들을 만들고 읽고 수정하고 지울 수 있는 database-abstract API를 자동으로 만듬
-- database-abstract API 혹은 database-access API라고도 함 
-
-#### DB API 구문 - Making Queries
-
-- ex) Article은 Class명, objects는 Manager, all()은 QuerySet API
-
-```python
-Article.Objects.all()
-```
-
-- Manager
-  - Django 모델에 데이터베이스 Query 작업이 제공되는 인터페이스
-  - 기본적으로 모든 Django 모델 클래스에 objects라는 Manager를 추가
-- QuerySet
-  - 데이터베이스로부터 전달받은 객체 목록
-  - queryset 안의 객체는 0개, 1개 혹은 여러 개일 수 있음
-  - 데이터베이스로부터 조회, 필터, 정렬 등을 수행 할 수 있음
-
-#### Django shell
-
-- 일반 Python shell을 통해서는 장고 프로젝트 환경에 접근할 수 없음
-- 그래서 장고 프로젝트설정이 load된 Python shell을 활용해 DB API구문 테스트 진행
-- 기본 Django shell보다 더 많은 기능을 제공하는 Shell_plus를 사용해서 진행 
-  - django-extension 설치 필요 
-
-#### 라이브러리 설치
-
-```
-$ pip install ipython
-$ pip install django-extensions
-```
-
-INSTALLED_APPS에 추가
-
-shell_plus 실행
-
-```
-$python manage.py shell_plus
-```
-
-
-
-## Customizing authentication in Django
-
-### Substituting a custom Usermodel
-
- ### User 모델 대체하기
-
-- 일부 프로젝트에서는 Django의 내장 User 모델이 제공하는 인증 요구사항이 적절하지 않을 수 있음
-  - ex) username 대신 email을 식별 토큰으로 사용하는 것이 더 적합한 사이트
-- Django는 User을 참조하는데 사용하는 AUTH_USER_MODEL 값을 제공하여, default user model을 재정의(override) 할 수 있도록 함
-- Django는 새 프로젝트를 시작하는 경우 기본 사용자 모델이 충분하더라도, 커스텀 유저 모델을 설정하는 것을 강력하게 권장 (highly recommentded)
-  - 단, 프로젝트의 모든 migrations 혹은 첫 migrate를 실행하기 전에 이 작업을 마쳐야 함 
-
-#### AUTH_USER_MODEL
-
-- User을 나타내는 모델
-- 프로젝트가 진행되는 동안 변경할 수 없음
-- 프로젝트 시작 시 설정하기 위한 것이며, 참조하는 모델은 첫번째 마이그레이션에서 사용할 수 있어야 함
-- 기본 값: 'auth.User'(auth 앱의 User모델)
-- 프로젝트 중간에 AUTH_USER_MODEL 변경하기
-  - 모델 관계에 영향을 미치기 때문에 훨 씬 더 어려운 작업이 필요
-  - 즉, 중간 변경은 권장하지 않으므로 초기에 설정하는 것을 권장
-
-#### Custom User 모델 정의하기
-
-- 관리자 권한과 함께 완전한 기능을 갖춘 User 모델을 구현하는 기본 클래스인 AbstractUser를 상속받아 새로운 User 모델작성 
-
-- 기존에 Djagno가 사용하는 User 모델이었던 auth 앱의 User 모델을 accounts 앱의 User 모델을 사용하도록 변경
-- admin site에 Custom User 모델 등록 
-
-- 프로젝트 중간에 진행한다면 데이터베이스를 초기화 한 후 마이글에ㅣ션 진행
-- 초기화 방법
-  - db.sqlite3 파일 삭제
-  - migrations 파일 모두 삭제 (파일명에 숫자가 붙은 파일만 삭제 )
-
-
-
-#### Custom user & Built-in auth forms
-
-- 기존 User모델을 사용하기 때문에 커스텀 User 모델로 다시 작성하거나 확장해야 하는 forms
-
-  - UserCreationForm
-  - UserChangeForm
-
-- 커스텀 User 모델이 AbstractUser의 하위 클래스인 경우 다음과 같은 방식으로 form을 확장
-
-  ```python
-  from django.contrib.auth.forms import UserCreationForm
-  form myapp.models import CustomUser
-  
-  class CustomUserCreationForm(UserCreationForm) :
-      
-      class Meta(UserCreationForm.Meta) :
-          model = CustomUser
-          fields = UserCreationForm.Meta.fiels + ('coustom_field')
-  ```
-
-  
-
-#### get_user_model()
-
-- 현재 프로젝트에서 활성화 된 사용자 모델을 반환
-  - User 모델을 커스터미이징 한 상황에서는 Custom User 모델을 반환
-- 이 때문에 Django는 User 클래스를 직접 참조하는 대신 django.contrib.auth.get_user_model()을 사용하여 참조해야 한다고 강조 

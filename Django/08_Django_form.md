@@ -384,6 +384,10 @@ class ArticleForm(forms.ModelForm) :
 
 
 
+
+
+
+
 ### Create Update html 합치기
 
 - request.resolver_match를 html 내부에 변수로 입력하면
@@ -426,6 +430,54 @@ ResolverMatch(func=articles.views.create, args=(), kwargs={}, url_name=create, a
 {% endblock content %}
 
 ```
+
+### 수동으로 Form 작성하기
+
+#### Rendering fields manually
+
+```django
+  <h2>1. Rendering fields manually</h2>
+  <form action="{% url 'articles:create' %} " method="POST">
+    {% csrf_token %}
+
+    <div>
+      {{form.title.errors}}
+      {{form.title.label_tag}}
+      {{form.title}}
+    </div>
+    <div>
+      {{form.content.errors}}
+      {{form.content.label_tag}}
+      {{form.content}}
+    </div>
+    <input type="submit">
+  </form>
+```
+
+#### Looping over the form's fields ({% for %})
+
+```django
+  <h2>2. Looping over the form's fields</h2>
+  <form action="{% url 'articles:create' %}" method="POST">
+    {% csrf_token %}
+
+    {% for field in  form%}
+      {% if field.errors %}
+        {% for error in field.errors %}
+          <div class="alert alert-danger">{{error}}</div>
+        {% endfor %}
+      {% endif %}
+      {{field.errors}}
+      {{field.label_tag}}
+      {{field}}
+    {% endfor %}
+    <input type="submit">
+  </form>
+```
+
+
+
+
 
 ## Handling HTTP requests
 

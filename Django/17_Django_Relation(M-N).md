@@ -1,4 +1,4 @@
-## Relation
+## M:N Relation
 
 ### Like 구현하기
 
