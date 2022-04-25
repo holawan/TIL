@@ -65,6 +65,8 @@ for (let i=0; i<6; i++) {
 ### for ..in
 
 - 객체(obejct)의 속성(key)들을 순회할 때사용
+  - javascript에서 객체는 dictionary를 의미하는 경우가 많다. 
+
 - 배열도 순회 가능하지만 권장하지 않음
 - 실행할 코드는 중괄호 안에 작성
 - 블록 스코프 생성
@@ -78,13 +80,16 @@ for (variable in object) {
 ```javascript
 // object(객체) > key-balue로 이루어진 자료 구조
 const capitals = {
-    korea : 'seout'
-    france : 'paris'
+    korea : 'seoul',
+    france : 'paris',
     USA : 'washington D.C.'
 }
 
-for (let capital in capitals){
-    consoel.log(capital) //korea, france, USA
+for (let nation in capitals){
+    console.log(nation) //korea, france, USA
+}
+for (let nation in capitals){
+    console.log(capitals[nation]) //seoul, paris,washington D.C
 }
 ```
 
@@ -127,13 +132,13 @@ for (let fruit in fruits) {
 
 //object
 const capitals = {
-    korea : 'seout'
-    france : 'paris'
-    USA : 'washington D.C.'
+    korea : 'seoul',
+    france : 'paris',
+    USA : 'washington D.C.',
 }
 
 for (let capital in capitals){
-    consoel.log(capital) //korea, france, USA
+    console.log(capital) //korea, france, USA
 }
 ```
 
@@ -142,13 +147,13 @@ for (let capital in capitals){
 ```javascript
 //object
 const capitals = {
-    korea : 'seout'
-    france : 'paris'
+    korea : 'seoul',
+    france : 'paris',
     USA : 'washington D.C.'
 }
 
 for (let capital in capitals){
-    consoel.log(capital) //korea, france, USA
+    console.log(capital) //korea, france, USA
 }const fruits = ['딸기', '바나나','메론']
 for (let fruit of fruits) {
     console.log(fruit) ///딸기, 바나나, 메론
@@ -156,13 +161,13 @@ for (let fruit of fruits) {
 
 //object
 const capitals = {
-    korea : 'seout'
-    france : 'paris'
+    korea : 'seoul',
+    france : 'paris',
     USA : 'washington D.C.'
 }
 
 for (let capital in capitals){
-    consoel.log(capital) // Uncaught TypeError : capital is not iteralbe
+    console.log(capital) // Uncaught TypeError : capital is not iteralbe
 }
 ```
 
