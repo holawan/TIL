@@ -1,7 +1,5 @@
 ## Django_form_class
 
-
-
 ### Intro
 
 - 우리는 지금까지 HTML form, input을 통해서 사용자로부터 데이터를 받음
@@ -384,10 +382,6 @@ class ArticleForm(forms.ModelForm) :
 
 
 
-
-
-
-
 ### Create Update html 합치기
 
 - request.resolver_match를 html 내부에 변수로 입력하면
@@ -474,8 +468,6 @@ ResolverMatch(func=articles.views.create, args=(), kwargs={}, url_name=create, a
     <input type="submit">
   </form>
 ```
-
-
 
 
 
@@ -596,8 +588,6 @@ ResolverMatch(func=articles.views.create, args=(), kwargs={}, url_name=create, a
 - uplolad_to 속성을 정의하여 업로드 된 파일에 사용할 MEDIA_ROOT의 하위 경로를 지정 
 - 업로드 된 파일의 경로는 django가 제공하는 'url' 속성을 통해 얻을 수 있음 
 
-
-
 ### MEDIA_ROOT
 
 - 사용자가 업로드 한 파일들을 보관할 디렉토리의 절대 경로
@@ -680,16 +670,16 @@ class Profile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 ```
 
-### Comment
 
-#### Comment CREATE
 
-#### THe 'save()' method
+### THe 'save()' method
 
 - save(commit=False)
   - Create, but don't save the new instance.
   - 아직 데이터베이스에 저장되지 않은 인스턴스를 반환
   - 저장하기 전에 객체에 대한 사용자 지정 처리를 수행할 때 유용하게 사용 
+
+#### Comment CREATE
 
 ```python
 @require_POST

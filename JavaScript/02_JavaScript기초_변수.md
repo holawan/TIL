@@ -97,3 +97,139 @@ console.log(bar) //0
 - 초기화
   - 선언된 변수에 처음으로 값을 저장하는 행위 또는 시점 
 
+#### 재할당
+
+- let (재할당 가능)
+
+```javascript
+let number = 10 //1. 선언 및 초기값 할당 
+number = 100     //2. 재할당
+
+console.log(number) //100
+```
+
+- const (재할당 불가능)
+  - 값을 바꾸는건 할 수 있지만, 재할당은 불가능하다. '='을 못쓴다. 
+
+
+```javascript
+const number = 10 //1. 선언 및 초기값 할당
+number = 10       // 2. 재할당 불가능 
+
+=> Uncaught TypeError 
+	:Assignment to constant variable.
+```
+
+#### 재선언
+
+- let (재선언 불가능)
+
+```javascript
+let number = 10 //1. 선언 및 초기값 할당
+let number = 50 //2. 재선언 불가능
+=> Uncaught Syntax Error
+	:Identifier 'number' has already been deciared 
+```
+
+- const (재선언 불가능)
+
+```javascript
+const number = 10 //1. 선언 및 초기값 할당
+const number = 50 //2. 재선언 불가능
+=> Uncaught SyntaxError
+	: Identifier 'number' has already been declared
+```
+
+#### 변수 선언 키워드 (let, const) 
+
+```javascript
+let x = 1 
+if (x === 1) {
+    let x = 2 
+    console.log(X) //2 
+}
+console.log(x) //1 
+```
+
+```python
+x = 1 
+if x==1 :
+    x = 2 
+    print(x) #2
+print(x) #2
+```
+
+
+
+- 블록 스코프
+  - if, for, 함수 등의 중괄호 내부를 가리킴
+  - 블록 스코프를 가지는 변수는 블록 바깥에서 접근 불가능
+  - 파이썬에서는 if문이 함수가 아니라서 접근이 가능했지만 여기선 안된다. 
+
+#### 변수 선언 키워드 'var'
+
+- var로 선언한 변수는 재선언 및 재할당 모두 가능
+- ES6 이전에 변수를 선언할 때 사용되던 키워드
+- 호이스팅되는 특성으로 인해 예기치 못한 문제 발생 가능
+  - 따라서 ES6 이후부터는 var 대신 const와 let을 사용하는 것을 권장
+- 재선언 및 재할당 모두 가능 
+
+```javascript
+var number = 10 //1. 선언 및 초기값 할당
+var number = 50 //2. 재할당
+
+console.log(number) //50
+```
+
+- 함수 스코프
+  - 함수의 중괄호 내부를 가리킴
+  - 함수 스코프를 가지는 변수는 함수 바깥에서 접근 불가능 
+
+```javascript
+function foo() {
+    var x = 5 
+    console.log(x) //5 
+}
+//ReferenceError : x is not defined 
+console.log(x)
+```
+
+- 호이스팅
+  - 변수를 선언 이전에 참조할 수 있는 현상
+  - 변수 선언 이전의 위치에서 접근 시 undefined를 반환
+
+```javascript
+//선언을 나중에 했는데도 입력이 되는 이상한 문제가 발생 
+a
+var a = 100
+// undefined
+a
+// 100
+```
+
+```javascript
+//에러인데 지금은 없다고 표현함 
+console.log(username) // undefined
+var username = '홍길동'
+
+console.log(email) //Uncaught ReferenceError
+let email = 'gildong@gmail.com'
+
+console.log(age)  // Uncaught ReferenceError
+const age = 50 
+```
+
+#### 정리
+
+- 자바스크립트 변수 사용 시 사용 가능한 키워드는 const, let, var이다.
+- const 키워드로 선언한 변수는 재할당이 불가능하다.
+- let 키워드로 선언한 변수는 재할당이 가능하다. 
+
+#### let, const, var 비교
+
+| 키워드 | 재선언 | 재할당 |   스코프    |     비고     |
+| :----: | :----: | :----: | :---------: | :----------: |
+|  let   |   X    |   O    | 블록 스코프 | ES6부터 도입 |
+| const  |   X    |   X    | 블록 스코프 | ES6부터 도입 |
+|  var   |   O    |   O    | 함수 스코프 |  사용 지양   |
+
