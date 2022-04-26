@@ -226,6 +226,14 @@ fruits.forEach((fruit,index) => {
 })
 ```
 
+#### 배열 순회 방법 비교
+
+| 방식     | 특징                                                         | 비고 |
+| -------- | ------------------------------------------------------------ | ---- |
+| for loop | 모든 브라우저 환경에서 지원<br />인덱스를 활용하여 배열의 요소에 접근<br />break, continue 사용 가능 |      |
+| for of   | 일부 오래된 브라우저 환경에서 지원 X<br />인덱스 없이 배열의 요소에 바로 접근 가능<br />break, continue 사용 가능 |      |
+| for Each | 대부분의 브라우저 환경에서 지원<br />break,continue 사용 불가능 |      |
+
 ### map
 
 - array.map(callback(element[, index[, array]]))
@@ -303,3 +311,79 @@ console.log(result) // 6
 - 배열의 각 요소에 대해 콜백 함수를 한 번씩 실행
 - 콜백 함수의 반환값이 참이면, 조건을 만족하는 첫번째 요소를 반환
 - 찾는 값이 배열에 없으면 undefined 반환 
+
+```javascript
+array.find((element, index, array)){
+    //do someting
+}
+```
+
+```javascript
+const avengers = [
+    {name : 'Tony Stark', age:45},
+    {name : 'Steve Rogers',age:32},
+    {name : 'Thor', age:40},
+]
+
+const result = avengers.find((avenger) => {
+    return avenger.name === 'Tony Stark'
+})
+
+console.log(result)
+//{name: 'Tony Stark', age: 45}
+```
+
+### some
+
+- array.some(callback(element[, index[, array]]))
+- 배열의 요소 중 하나라도 주어진 판별 함수를 통과하면 참을 반환
+- 모든 요소가 통과하지 못하면 거짓 반환
+- 빈 배열은 항상 거짓 반환
+
+```javascript
+array.some((element, index, array)){
+    //do someting
+}
+```
+
+```javascript
+const numbers = [1,3,5,7,9]
+
+const hasEvenNumber = numbers.some((num) ->{
+    return num %2 ===0
+})
+console.log(hasEvenNumber) //false
+
+const hasOddNumber = numbers.some((num) => {
+    return num %2 
+})
+console.log(hasOddNumber) //True
+```
+
+### every
+
+- array.every(callback(element[, index[,array]]))
+- 배열의 모든 요소가 주어진 판별 함수를 통과하면 참을 ㅂ나환
+- 하나의 요소라도 통과하지 못하면 거짓 반환
+- 빈 배열은 항상 참 반환
+
+```javascript
+array.every((element, index, array)){
+    //do someting
+}
+```
+
+```javascript
+const numbers = [2,4,6,8,10]
+
+const isEveryEvenNumber = numbers.every((num) ->{
+    return num %2 ===0
+})
+console.log(isEveryEvenNumber) //true
+
+const isEveryOddNumber = numbers.some((num) => {
+    return num %2 
+})
+console.log(isEveryOddNumber) //false
+```
+
