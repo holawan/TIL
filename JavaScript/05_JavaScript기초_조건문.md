@@ -47,7 +47,7 @@ if (nation === 'Korea') {
 
 #### switch
 
-- 표현식의 결과값을 이요한 조건문 
+- 표현식의 결과값을 이용한 조건문 
 - 표현식의 결과값과 case 문의 오른쪽 값을 비교
 - break 및 default문은 [선택적]으로 사용 가능
 - break문이 없는 경우 break문을 만나거나 default문을 실행할 때까지 다음 조건문 실행
