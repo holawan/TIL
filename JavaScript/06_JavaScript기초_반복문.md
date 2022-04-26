@@ -116,6 +116,12 @@ for (const fruit of fruits) {
     //재할당 불가
     console.log(fruit)
 }
+
+//안되는 경우 why? 재할당이 안되는데 블럭 내에서 재할당을 했기 때문 
+for (const fruit of fruits) {
+    fruit = fruit + '!'
+    console.log(fruit)
+}
 ```
 
 ### for ...in vs for ...of
