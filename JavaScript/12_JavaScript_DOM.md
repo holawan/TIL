@@ -143,10 +143,6 @@
   - 한 번에 오직 하나의 Node만 추가할 수 있음
   - 만약 주어진 Node가 이미 문서에 존재하는 다른 Node를 참조한다면 새로운 위치로 이동
 
-### DOM 변경 실습 
-
-
-
 #### ParentNode.append() vs Node.appendChild()
 
 - append()를 사용하면 DOMString 객체를 추가할 수도 있지만, appendChild()는 Node 객체만 허용
