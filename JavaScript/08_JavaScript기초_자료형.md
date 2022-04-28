@@ -363,7 +363,7 @@ console.log(hasOddNumber) //True
 ### every
 
 - array.every(callback(element[, index[,array]]))
-- 배열의 모든 요소가 주어진 판별 함수를 통과하면 참을 ㅂ나환
+- 배열의 모든 요소가 주어진 판별 함수를 통과하면 참을 반환
 - 하나의 요소라도 통과하지 못하면 거짓 반환
 - 빈 배열은 항상 참 반환
 
