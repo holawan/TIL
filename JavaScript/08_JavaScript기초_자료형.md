@@ -95,7 +95,7 @@ console.log(numbers.length-1) // 5
 | push & pop      | 배열의 가장 뒤에 요소를 추가 또는 제거                       |                          |
 | unshift & shift | 배열의 가장 앞에 요소를 추가 또는 제거                       |                          |
 | includes        | 배열에 특정 값이 존재하는지 판별 후 참/거짓 반환             |                          |
-| index0f         | 배열에 특정 값이 존재하는지 판별 후 가장 첫 번째로 찾은 요소의 인덱스 반환 | 요소가 없을 경우 -1 반환 |
+| indexOf         | 배열에 특정 값이 존재하는지 판별 후 가장 첫 번째로 찾은 요소의 인덱스 반환 | 요소가 없을 경우 -1 반환 |
 | join            | 배열의 모든 요소를 구분자를 이용하여 연결                    | 구분자 생략 시 쉼표 기준 |
 
 ### reverse
@@ -136,9 +136,9 @@ console.log(numbers.includes(1)) //true
 console.log(numbers.includes(100)) //false
 ```
 
-### index9f
+### indexOf
 
-- array.index0f(value)
+- array.indexOf(value)
 - 배열에 특정 값이 존재하는지 확인 후 가장 첫 번째로 찾은 요소의 인덱스 반환
 - 만약 해당 값이 없을 경우 -1 반환
 
@@ -146,10 +146,10 @@ console.log(numbers.includes(100)) //false
 const numbers = [1,2,3,4,5]
 let result
 
-result = numbers.index0f(3) //2 
+result = numbers.indexOf(3) //2 
 console.log(result)
 
-result = numbers.index0f(100) //-1
+result = numbers.indexOf(100) //-1
 console.log(result)
 ```
 
