@@ -46,7 +46,15 @@
     - EventListener 인터페이스 혹은 JS function 객체(콜백 함수)여야함 
 - 대상(EventTarget)에 특정 이벤트(type)가 발생하면, 할 일(listener)을 등록하자 
 
+```javascript
+const btn = document.querySelector('.button')
+btn.addEventListener('click',function(event){
+    alert('버튼이 클릭되었습니다.')
+    console.log(event)
+})
+```
 
+![btn](13_JavaScript_Event.assets/btn.PNG)
 
 ### Event 취소
 

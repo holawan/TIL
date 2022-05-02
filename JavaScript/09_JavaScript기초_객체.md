@@ -154,6 +154,8 @@ const name = userInformation.name
 const userId = userInformation.userId
 const phoneNumber = userInformation.phoneNumber
 const email = userInformation.email
+
+const {name} = userInformation
 ```
 
 #### Spread operator

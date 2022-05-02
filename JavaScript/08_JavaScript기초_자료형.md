@@ -116,13 +116,33 @@ console.log(numbers) // [5,4,3,2,1]
 - arry.pop()
   - 배열의 마지막 요소 제거 
 
+```javascript
+const number = [1,2,3,4,5]
+numbers.push(100)
+console.log(numbers)//[1,2,3,4,5,100]
+
+numbers.pop()
+console.log(numbers)//[1,2,3,4,5]
+```
+
+
+
 ### unshift & shift 
 
 - array.unshift()
   - 배열의 가장 앞에 요소 추가
-
 - array.shift()
   - 배열의 첫번째 요소 제거 
+
+```javascript
+const numbers = [1,2,3,4,5]
+
+numbers.unshift(100)
+console.log(numbers) // [100,1,2,3,4,5]
+
+numbers.shift()
+console.log(numbers) //[1,2,3,4,5]
+```
 
 
 ### includes
@@ -185,6 +205,10 @@ console.log(newArray) // [0,1,2,3,4]
 ```
 
 ### 배열 메서드 목록 심화
+
+- 배열을 순회하며 특정 로직을 수행하는 메서드
+- 메서드 호출 시 인자로 callback 함수를 받는 것이 특징
+  - callback 함수 : 어떤 함수의 내부에서 실행될 목적으로 인자를 넘겨받는 함수를 의미 
 
 | 메서드  | 설명                                                         | 비고         |
 | ------- | ------------------------------------------------------------ | ------------ |
@@ -273,7 +297,7 @@ array.filter((element,index,array) =>{
 const numbers = [1,2,3,4,5]
 
 const oddNums = numbers.filter((num,index) => {
-    return num *2
+    return num %2
 })
 console.log(oddNums) //1,3,5
 ```
@@ -291,7 +315,7 @@ console.log(oddNums) //1,3,5
 - 빈 배열의 경우 initialValue를 제공하지 않으면 에러 발생 
 
 ```javascript
-array.reduec((acc, element, index, array) => {
+array.reduce((acc, element, index, array) => {
     //do someting
 }, initialValue)
 ```
@@ -349,7 +373,7 @@ array.some((element, index, array)){
 ```javascript
 const numbers = [1,3,5,7,9]
 
-const hasEvenNumber = numbers.some((num) ->{
+const hasEvenNumber = numbers.some((num) =>{
     return num %2 ===0
 })
 console.log(hasEvenNumber) //false
@@ -376,7 +400,7 @@ array.every((element, index, array)){
 ```javascript
 const numbers = [2,4,6,8,10]
 
-const isEveryEvenNumber = numbers.every((num) ->{
+const isEveryEvenNumber = numbers.every((num) =>{
     return num %2 ===0
 })
 console.log(isEveryEvenNumber) //true
