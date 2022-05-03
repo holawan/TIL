@@ -150,3 +150,10 @@ console.log('end')
 2. Promise-style
    - Modern Web APIs에서의 새로운 코드 스타일
    - XMLHttpRequest 객체를 사용하는 구조보다 조금 더 현대적인 버전 
+
+### 왜 비동기 방식이 필요할까
+
+#### "Human-centered design with UX"
+
+- 인간 중심으로 설계된 사용자 경험
+- 실제 Ajax라는 용어를 처음 논문에 사용한 Jesse James Garrett이 Ajax를 소개하며 강조한 한 마디 
