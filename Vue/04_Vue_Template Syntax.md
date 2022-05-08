@@ -388,3 +388,169 @@
 </body>
 ```
 
+
+
+### Options/Data - 'computed'
+
+- 데이터를 기반으로 하는 계산된 속성
+- 함수의 형태로 정의하지만 함수가 아닌 함수의 반환 값이 바인딩 됨
+- 종속된 데이터에 따라 저장(캐싱) 됨
+- 종속된 데이터가 변경될 때만 함수를 실행
+- 즉, 어떤 데이터에도 의존하지 않는 computed 속성의 경우 절대로 업데이트 되지 않음
+- 반드시 반환 값이 있어야 함
+
+```html
+<body>
+  <div id="app">
+    {{other}}
+    <div>
+      <input type="text" v-model="message">
+    </div>
+    <p>{{message}}</p>
+    <p>Reverse by Method : {{reverseMessage()}}</p>
+    <p>Reverse by Computed : {{reversedMessage}}</p>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el :'#app',
+      data : {
+        message:'Original',
+        other : 'asdf'
+      },
+      //data를 바꾸는 로직 
+      methods : {
+        reverseMessage() {
+          return this.message.split('').reverse().join('')
+          console.log('ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ')
+        }
+      },
+      //data를 통해 값을 얻음 
+      computed : {
+        //(data에 의존하는)이미 계산된 값
+        reversedMessage(){
+          return this.message.split('').reverse().join('')
+        }
+      }
+    })
+  </script>
+</body>
+```
+
+### computed & methods
+
+- computed 속성 대신 methods에 함수를 정의할 수도 있음
+  - 최종 결과에 대해 두 가지 접근 방식은 서로 동일
+- 차이점은 computed 속성은 종속 대상을 따라 저장(캐싱) 됨
+- 즉, computed는 종속된 대상이 변경되지 않는 한 computed에 작성된 함수를 여러 번 호출해도 계산을 다시 하지 않고 계산되어 있던 결과를 반환
+- 이에 비해 methods를 호출하면 렌더링을 다시 할 때마다 항상 함수를 실행
+
+
+
+### Options/Data - 'watch'
+
+- 데이터를 감시
+- 데이터에 변화가 일어났을 때 실행되는 함수 
+
+```html
+<body>
+  <div id="app">
+    <p>a: {{ a }}</p>
+    <p>Computed: a의 제곱은 {{ square }} 입니다.</p>
+    <p>Watch: a는 {{ increase }} 만큼 증가했습니다.</p>
+    <input type="number" v-model.number="delta">
+    <button @click="a += delta">a 증가</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        a: 0,
+        delta: 0,
+        increase: 0,
+      },
+      computed: {
+        square: function () {
+          console.log('Computed !')
+          return this.a**2
+        }
+      },
+      // a가 변경되면 변경된 값을 콜백함수의 첫번째 인자로 전달하고 이전 값을 두번째 인자로 전달
+      // computed는 새 프로퍼티를 생성하지만 watch는 아무 프로퍼티도 생성하지 않고 익명함수는 단순히 콜백함수 역할만 함
+      // watch에 명시된 프로퍼티는 감시할 대상을 의미할 뿐임
+      watch: {
+        a: function (newValue, oldValue) {
+          console.log('Watch !')
+          this.increase = newValue - oldValue
+        }
+      }
+    })
+  </script>
+</body>
+```
+
+
+
+### computed & watch
+
+- computed
+  - 특정 데이터를 직접적으로 사용/가공하여 다른 값으로 만들 대 사용
+  - 속성은 계산해야 하는 목표 데이터를 정의하는 방식으로 소프트웨어 공학에서 이야기하는 '선언형 프로그래밍' 방식
+  - 특정 값이 변동하면 해당 값을 다시 계산해서 보여준다.
+- watch
+  - 특정 데이터의 변화 상황에 맞춰 다른 data 등이 바뀌어야 할 때 주로 사용
+  - 감시할 데이터를 지정하고 그 데이터가 바뀌면 특정 함수를 실행하는 방식
+  - 소프트웨어 공학에서 이야기하는 '명령형 프로그래밍' 방식 
+  - 특정 값이 변동하면 다른 작업을 한다
+  - 특정 대상이 변경되었을 때 콜백 함수를 실행시키기 위한 트리거
+- computed와 watch는 어떤 것이 더 우수한 것이 아닌 사용하는 목적과 상황이 다름 
+
+### 선언형 & 명령형
+
+- 선언형 : 계산해야 하는 목표 데이터를 정의 ('computed')
+- 명령형 : 데이터가 바뀌면 특정 함수를 실행함 ('watch')
+
+
+
+### Options/Assets - 'filter'
+
+- 텍스트 형식화를 적용할 수 있는 필터
+- interpolation 혹은 v-bind를 이용할 때 사용 가능
+- 필터는 자바스크립트 표현식 마지막에 '|'(파이프)와 함께 추가되어야 함
+- 이어서 사용 (chaining) 가능 
+
+```html
+<body>
+  <div id="app">
+    {{ numbers | getOddNumbers | getUnderTen }}
+    {{ getOddAndUnderTen }}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      },
+      filters: {
+        getOddNumbers(array) {
+          return array.filter(num => num % 2)
+        },
+        getUnderTen(array) {
+          return array.filter(num => num < 10)
+        }
+      },
+      // w/ computed
+      computed: {
+        getOddAndUnderTen() {
+          return this.numbers.filter(num => num % 2 && num < 10)
+        }
+      }
+    })
+  </script>
+```
+
