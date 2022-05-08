@@ -188,7 +188,7 @@
         {{fruit}}
       </div>
       <!-- 요소, 인덱스 순으로 뽑을 수 있음  -->
-      <div v-for="(fruit,idx) in fruits">
+      <div v-for="(fruit,idx) in fruits" :key="idx">
         {{ idx }} => {{fruit}}
 
       </div>
@@ -237,7 +237,50 @@
   - @
   - v-on:click -> @click
 
+```html
+<body>
+  <div id="app">
+    <!-- 메서드 핸들러 -->
+    <button v-on:click="alertHello">Button</button>
+    <button @click="alertHello">Button</button>
+    <!-- 기본 동작 방지 -->
+    <form action="" @submit.prevent="alertHello">
+      <button>gogo</button>
+    </form>
 
+    <!-- 키 별칭을 이용한 키 입력 수식어 -->    
+    <input type="text" @keyup.enter="log">
+    <!-- cb 함수에서 특수 문법( ) 실행할 때 a를 넘긴다. 
+    log를 실행할 건데 인자로 a를 넘긴다. -->
+    <input type="text" @keyup.enter="log('a')">
+    <p>{{message}}</p>
+    <button @click="changeMessage">change message</button>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const app= new Vue({
+      el : '#app',
+      //값
+      data :{
+        message : 'Hello Vue',
+      },
+      //행동
+      methods:{
+        alertHello : function() {
+          alert('hello')
+        },
+        log : function(event) {
+          console.log(event)
+        },
+        changeMessage() {
+          this.message='New message!!'
+        }
+      }
+    })
+  </script>
+</body>
+```
 
 ### v-bind
 
@@ -246,3 +289,102 @@
 - 약어(Shorthand)
   - : (콜론)
   - v-bind:href -> :href
+
+```html
+  <style>
+    .active {
+      color: red;
+    }
+
+    .my-background-color {
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- 속성 바인딩 -->
+    <img :src="imageSrc" :alt="altMsg">
+    <hr>
+
+    <!-- 클래스 바인딩 -->
+    <div :class="{ active : isRed }">
+      클래스바인딩 
+    </div>
+    <h3 :class="[activeRed,myBackground]">
+      hello vue
+    </h3>
+    <hr>
+
+    <!-- 스타일 바인딩 -->
+    <p :style="{ fontSize : fontSize +'px' }">
+      this is paragraph
+    </p>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el:'#app',
+      data:{
+        fontSize : 16,
+        altMsg: 'this is image',
+        imageSrc: 'https://picsum.photos/200/300/',
+        isRed :true,
+        activeRed:'active',
+        myBackground:'my-background-color',
+      }
+    })
+  </script>
+</body>
+```
+
+### v-model
+
+- HTML form 요소의 값과 data를 양방향 바인딩
+- 수식어
+  - .lazy
+    - input 대신 change 이벤트 이후에 동기화
+  - .number
+    - 문자열ㅇ르 숫자로 변경
+  - .trim
+    - 입력에 대한 trim을 진행 
+
+```html
+<body>
+  <div id="app">
+    <!-- 단방향 -->
+    <!-- input의 변화가 데이터의 변화를 바꾸지만 데이터의 변화가 input의 변화를 바꾸진  않음  -->
+    <h2>Input -> Data</h2>
+    <p> {{ msg1 }}</p>
+    <input type="text" @input="onInputChange">
+    <hr>
+    <!-- 양방향 -->
+    <h2>input<->Data</h2>
+    <p> {{msg2 }}</p>
+    <input type="text" v-model="msg2">
+    <hr>
+    체크
+    <input type="checkbox" v-model="checked">
+    <p>{{checked}}</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el : '#app',
+      data :{
+        msg1 : '111',
+        msg2 : '222',
+        checked :true
+      },
+      methods : {
+        onInputChange (event) {
+          this.msg1 = event.target.value
+        }
+      },
+    })
+  </script>
+</body>
+```
+
