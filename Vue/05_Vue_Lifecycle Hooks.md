@@ -55,3 +55,4 @@
   </script>
 ```
 
+![vue-lifecycle](05_Vue_Lifecycle Hooks.assets/vue-lifecycle.png)
