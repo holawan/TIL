@@ -21,3 +21,60 @@
   - pip와 마찬가지로 다양한 의존성 패키지를 관리
 - Node.js의 기본 패키지 관리자
 - Node.js 설치 시 같이 설치됨
+
+
+
+### Vue CLI Quick start
+
+- 설치
+
+```
+$ npm install -g @vue/cli
+```
+
+- 버전 확인
+
+```
+$ vue --version
+```
+
+- 프로젝트 생성
+
+```
+$ vue create my-first-app
+```
+
+- npm 레지스트리 변경 (환경에 따라 나오지 않을 수 있음)
+
+- Vue 2버전 선택
+
+```
+Vue CLI v5.0.4
+? Please pick a preset : (Use arrow keys)
+> Default ([Vue 3] babel, eslint)
+  Default ([Vue 2] babel, eslint)
+```
+
+- 프로젝트 디렉토리 이동
+
+```
+$ cd my-first-app
+```
+
+- 서버 실행
+
+```
+$ npm run serve
+```
+
+## Babel & Webpack
+
+### Babel
+
+- JavaScript compiler
+- 자바스크립트의 ECMAScript 2015+ 코드를 이전 버전으로 번역/변환해 주는 도구
+- 과거 자바스크립트의 파편화와 표준화의 영향으로 코드의 스펙트럼이 매우 다양
+  - 이 때문에 최신 문법을 사용해도 이전 브라우저 혹은 환경에서 동작하지 않는 상황이 발생
+- 원시 코드(최신 버전)을 목적 코드(구 버전)로 옮기는 번역기가 등장하면서 개발자는 더 이상 내 코드가 특정 브라우저에서 동작하지 않는 상황에 대해 크게 고민하지 않을 수 있게 됨 
+
+![babel](07_Vue_CLI.assets/babel.PNG)
