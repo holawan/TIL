@@ -129,3 +129,22 @@ CORS_ALLOWED_ORIGINS = [
 # CORS_ALLOW_ALL_ORIGIN = True
 ```
 
+
+
+### 'django-auth'
+
+https://dj-rest-auth.readthedocs.io/en/latest/
+
+```python
+#settings.py
+INSTALLED_APPS = [
+	...,
+    'rest_framework.authtoken', #token 기반 auth
+
+    #DRF auth
+    'dj_rest_auth', #signup 제외 auth 담당
+    
+    ...
+]
+```
+
