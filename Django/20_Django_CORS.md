@@ -135,6 +135,10 @@ CORS_ALLOWED_ORIGINS = [
 
 https://dj-rest-auth.readthedocs.io/en/latest/
 
+https://www.django-rest-framework.org/api-guide/authentication/
+
+https://www.django-rest-framework.org/api-guide/permissions/
+
 ```python
 #settings.py
 INSTALLED_APPS = [
@@ -146,5 +150,12 @@ INSTALLED_APPS = [
     
     ...
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
 ```
 
