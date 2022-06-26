@@ -17,9 +17,9 @@ def func(combi) :
 
 
 lst = [1,2,3,4,5]
-r = 3 
+r = 5
 
-# func([])
+func([])
 
 def func2(combi,idx) :
     if len(combi) == r :
