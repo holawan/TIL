@@ -49,6 +49,22 @@ def make_combi(combi):
 print(div, '조합', div)
 make_combi([])
 
+def make_combi3(combi):
+
+    if len(combi) == r:
+        print(combi)
+        return
+
+
+    for i in lst:
+        if combi and i in combi :
+            continue
+        combi.append(i)
+        make_combi3(combi)
+        combi.pop()
+
+print(div, '조합', div)
+make_combi([])
 
 
 # 조합
