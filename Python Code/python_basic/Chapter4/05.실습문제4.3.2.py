@@ -7,4 +7,4 @@ birth = int(input("태어난 연도를 입력해주세요>>>"))
 from datetime import datetime
 
 now = datetime.now().year
-print(now-birth)
+print(f'현재 나이는 {now-birth+1}세입니다! ')
