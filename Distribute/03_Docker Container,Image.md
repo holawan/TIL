@@ -164,3 +164,195 @@
 
    ![IP 접속 테스트](03_Docker Container,Image.assets/IP 접속 테스트.PNG)
 
+## Django Image Container
+
+### Dockerfile syntax
+
+#### Docker File 
+
+- Docker에 Django Container를 만드는 것은, 이미 Docker hub에 있는게 아닌 직접 만든 소스이므로, 배포가 다소 까다로울 수 있다.
+
+-  이러한 Docker Image를 만드는 일종의 설계서가 Dockerfile이다. 
+- How to make an image
+
+Image를 가져와서 실제 컨테이너를 만들기 위해 필요한 과정들을 Dockerfile을 통해서 만들어준다. 
+
+- How did we set our environment? 
+  - 우리가 어떻게 환경설정을 했는지 Docker file에 적어줘야 한다. 
+
+#### Dockerfile Commend 
+
+- FROM
+  - `Select Base Image`
+  - **가장 시작이 되는 이미지를 어떤 것으로 할 것인지 하는 명령어가 FROM이다. **
+  - 이미지에서 컨테이너를 가져오는데, 그것은 클래스와 인스턴스를 가져오는 것과 같다.
+  - 클래스는 상속이 가능하다. 
+  - 이미지도 이미지를 가져와서 새로운 이미지를 가져오는 것이 가능하다.
+  - 이 새로운 이미지로 새로운 컨테이너를 만드는 것도 가능하다.
+- RUN
+  - `Run Command `
+    - pip list
+    - pip install
+    - git clone 
+    - git ...
+    - cd ..
+  - 다양한 명령어를 사용해서 실제 서버에서 Linux 명령어를 사용하는 것 처럼 이용할 수 있다.
+- WORKDIR
+  - `cd ...` 와 유사하다 
+  - Change Directory 
+  - 어떤 폴더로 옮겨갈 것인지 명령하는 Command
+  - **`cd ...` 는 상대경로가 적용되지만 WORKDIR는 절대 경로 기반으로 명령해야한다!  **
+    - 즉, 모든 경로를 정확하게 입력해줘야함 
+- EXPOSE
+  - Django container에서 Port를 사용할 수 있도록 노출시켜, 외부의 가상서버와 연결시킬 수 있도록 노출시켜주는 커맨드이다. 
+    - Django에서 8000번 port를 사용하겠다 하면, 실제 8000번 port를 사용할 수 있다.
+- CMD
+  - Docker container에 Django container를 넣으려 할 때 넣고 끝나는게 아니라 안에서 서버가 돌아가야 하는데, 그 사전 작업을 기본 커맨드로 설정한 것이다. 
+  - Django Container를 실행하려면 command를 넣어주고 Start Command를 해야한다. 
+    - python manage.py runserver 0.0.0.0:8000
+
+###  1. Upload Source to Github 
+
+- 가상환경에서 설치한 package들을 requirements.txt에 담는다.
+
+  ```
+  pip freeze >> requiremetns.txt
+  ```
+
+- ignore에 없는 파일들을 git에 업로드한다. 
+
+#### 
+
+### 2. Writing Dockerfile
+
+1. IDE에 Dockerfile을 생성해준다.
+
+2. BaseImage를 설정해준다.
+
+   - Python이 설치되어 있는 환경을 Base Image로 사용한다.
+   - Dockerhub에서 나의 python version과 맞는 이미지를 가져온다.
+
+   ```dockerfile
+   FROM python:3.9.13
+   ```
+
+3. WORKDIR를 설정해준다.
+
+   ```dockerfile
+   WORKDIR /home/
+   ```
+
+4. Github를 클론한다.
+
+   ```
+   RUN git clone [repository]
+   ```
+
+5. HOME에서 git clone을 사용했기 때문에, HOME에 레포 폴더가 생성된다.
+
+   - 따라서 해당 경로로 이동한다.
+
+   ```dockerfile
+   WORKDIR /home/Pinterest
+   ```
+
+6. 라이러리를 설치한다.
+
+   ```dockerfile
+   RUN pip install -r requirements.txt
+   ```
+
+7. migrate를 진행한다.
+
+   ```dockerfile
+   RUN python manage.py migrate
+   ```
+
+8. Port를 노출시킨다.
+
+   ```docker
+   EXPOSE 8000
+   ```
+
+9. Runserver를 list 형태로 진행한다.
+
+   ```dockerfile
+   CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+   ```
+
+10. git ignore에 적어둔 secretkey 및 보안 정보를 입력해준다. (일단 임시적으로, 나중에 해결 방법을 강의에서 다룬다고 한다.)
+
+    - secretkey를 공개한채로 git에 올리면 절대 안됨!! 
+
+    ```
+    RUN echo "SECRET_KEY=[yoursecretkey]" > .env
+    ```
+
+### 3. Building Image
+
+1. Portainer.io에 접속 > Images > Buiild a New Image
+
+2. 이름 설정
+   - tag를 붙일 수 있는데 뒤에 태그로 version을 설정할 수 있음
+     - django_test_image:1
+
+3. Dockerfile 업로드
+4. Build the Image 클릭! 
+   - 첫 이미지 빌드는 약간 느릴 수 있지만 그 이후에는 빨라진다! 
+
+![imagebuild](03_Docker Container,Image.assets/imagebuild.PNG)
+
+5. Build 성공
+
+   ![build성공](03_Docker Container,Image.assets/build성공.PNG)
+
+6. Container추가
+
+   - Containers > add container
+
+   - 이름은 django_container, Image는 이전에 생성한 이미지로 적용
+   - publising port를 host: 8000, container:8000으로 설정 
+   - deploy
+
+##### 배포 후 console로 작업을 할 때 
+
+- 원하는 container로 이동 후 Exec console을 클릭
+
+  ![exec console](03_Docker Container,Image.assets/exec console.PNG)
+
+- ex) superuser 만들기
+
+  ![console](03_Docker Container,Image.assets/console.PNG)
+
+- console에 python manage.py createsuperuser 입력
+- id, email 등 입력
+- 생성 완료 !
+
+##### Error 발생 후기
+
+- 현재 배포는 강의를 따라서 진행하는데, 4번 과정에서 environmetn error가 발생했다.
+- 해당 에러는 과거에도, 많이 보았던 에러이기 때문에, library의 버전 문제나 강좌와 다른 python 버젼을 써서 발생할 수 있을 것이라는 생각에 이것저것 검색을 해봤다.
+- 강의를 따라가다보니 과거에 내가 에러가 나서 임의로 .env파일을 root 폴더에서 앱 내부로 옮겼던 것을 잊었다.
+- 따라서, dockerfile에서 .env를 생성할 때 폴더 이동을 한 차례 더 했어야 했는데, 처음에 강의를 따라가다보니 그러지 못했다.
+- 그래서, 계속 SECRET_KEY를 찾을 수 없다는 enviornment 에러가 떴고, 여러번 빌드 테스트를 진행한 후, 내가 예전에 env 파일을 옮겼다는 것을 깨달았다. 
+- 따라서, 서버에서 env 파일을 생성하는 위치를 변경한 후 빌드를 해서 성공할 수 있었다.
+
+###  Installing Gunicorn
+
+#### 기존 배포 방식의 문제
+
+- 현재 배포를 했을 때, Docker에서 python manage.py runserver로 서버를 실행하는데 이는 개발 환경에서 권장되지 않으며, 하면 안되는 방식이다. 
+
+- Django 공식문서에서도, runserver의 주의사항이 있는데, 배포 환경에서 해당 명령어를 쓰면 안된다고 명시되어 있다.
+
+- 이는 개발용으로 테스트 하는 것이다. Django는 웹 프레임워크를 만드는 것이지 웹 서버를 만드는 것이 아니다.
+
+- https://docs.djangoproject.com/ko/4.0/intro/tutorial01/
+
+  - Django 개발 서버를 시작했습니다. 개발 서버는 순수 Python으로 작성된 경량 웹 서버입니다. 운영 준비가 될 때까지 Apache와 같은 운영 서버를 구성할 필요 없이 신속하게 개발할 수 있도록 Django에 포함했습니다.
+
+    이쯤에서 하나 기억할 것이 있습니다. 이 서버를 운영 환경과 유사한 환경에서 **사용하지 마십시오.** 개발 중에만 사용할 수 있도록 되어 있습니다. (우리는 웹 서버가 아닌 웹 프레임워크를 만드는 사업을 하고 있습니다.)
+
+- 이를 위해 Django container안에 **Gunicorn**이라는 라이브러리를 설치한다.
+
+#### Gunicorn
