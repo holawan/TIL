@@ -164,7 +164,35 @@
 
    ![IP 접속 테스트](03_Docker Container,Image.assets/IP 접속 테스트.PNG)
 
-## Django Image Container
+#### 컨테이너 생성 시 80포트를 열 때 이미 사용하고 있다는 에러가 발생하면 
+
+driver failed programming external connectivity on endpoint nginx  Error starting userland proxy: listen tcp4 0.0.0.0:80: bind: address already in use
+
+- 사용하고 있는 포트 확인
+
+```
+sudo lsof -i :80
+nginx   92793     root    6u  IPv4 981794      0t0  TCP *:http (LISTEN)
+nginx   92793     root    7u  IPv6 981795      0t0  TCP *:http (LISTEN)
+nginx   92794 www-data    6u  IPv4 981794      0t0  TCP *:http (LISTEN)
+nginx   92794 www-data    7u  IPv6 981795      0t0  TCP *:http (LISTEN)
+nginx   92795 www-data    6u  IPv4 981794      0t0  TCP *:http (LISTEN)
+nginx   92795 www-data    7u  IPv6 981795      0t0  TCP *:http (LISTEN)
+nginx   92796 www-data    6u  IPv4 981794      0t0  TCP *:http (LISTEN)
+nginx   92796 www-data    7u  IPv6 981795      0t0  TCP *:http (LISTEN)
+nginx   92797 www-data    6u  IPv4 981794      0t0  TCP *:http (LISTEN)
+nginx   92797 www-data    7u  IPv6 981795      0t0  TCP *:http (LISTEN)
+```
+
+- 포트 죽이기
+
+```
+sudo kill 92793
+```
+
+- 다시 컨테이너 만들기 
+
+## jango Image Container
 
 ### Dockerfile syntax
 
@@ -220,8 +248,6 @@ Image를 가져와서 실제 컨테이너를 만들기 위해 필요한 과정�
   ```
 
 - ignore에 없는 파일들을 git에 업로드한다. 
-
-#### 
 
 ### 2. Writing Dockerfile
 
