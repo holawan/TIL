@@ -89,4 +89,46 @@ services:
     # 출력된 패스워드 입력 
     ```
 
-    
+
+#### Jenkins 관리
+
+![image-20221023225828602](C:\Users\SAMSUNG\AppData\Roaming\Typora\typora-user-images\image-20221023225828602.png)
+
+![image-20221023225950678](C:\Users\SAMSUNG\AppData\Roaming\Typora\typora-user-images\image-20221023225950678.png)
+
+- 시스템 설정을 통해 Jenkins 전체를 다룰 수 있다.
+  - URL 관리
+  - github 설정
+  - mail 설정 등 
+- 플러그인 관리
+  - 설치가능 탭에서 원하는 플러그인을 검색하고 설치할 수 있다.
+  - 이미 설치된 플러그인을 확인할 수 있고, 제거할 수 있다.
+
+- Credential 관리
+  - Jenkins scope의 username, password, ssh key, secret 등 설정 가능 
+
+### 새로운 Item
+
+##### Freestyle project 
+
+- github project, build history 관리, 소스코드 관리, 빌드 유발, 빌드 환경 설정 등 
+
+- Build periodically
+
+  ![image-20221023230321760](C:\Users\SAMSUNG\AppData\Roaming\Typora\typora-user-images\image-20221023230321760.png)
+
+  
+
+  - 분마다 실행을 확인한다. 
+
+- Build step
+
+  ![image-20221023230419082](C:\Users\SAMSUNG\AppData\Roaming\Typora\typora-user-images\image-20221023230419082.png)
+
+  - 빌드가 실행될 때, 빌드가 실행되고 있다고 메시지 
+
+##### Pipeline Job
+
+- pipeline이 어떻게 실행되는지 명세 
+
+  ![image-20221023230600893](C:\Users\SAMSUNG\AppData\Roaming\Typora\typora-user-images\image-20221023230600893.png)
