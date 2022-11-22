@@ -36,39 +36,6 @@
 
   
 
-#### 2) 카카오 로그인
-
-- 카카오 ID를 request body에 넣고 POST 요청을 보내면 token return
-
-**Ex)**
-
-- request
-
-  ```
-  {
-    "kakao_id": "123456"
-  }
-  ```
-
-- response
-
-  ```
-  HTTP Status: 201
-  {
-    "user": {
-      "id": 23,
-      "phone": "01000000000",
-      "kakao_id": "123456"
-    },
-    "token": {
-      "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY3MTQ0NzYwLCJpYXQiOjE2NjcxNDQ3NTcsImp0aSI6ImVhZGE5N2QzZmVjYjRlYzNiYjFlZGZlN2UwNjc2NTMzIiwidXNlcl9pZCI6MjN9.RNz8kCA0kYK4igeZHr5EpH5D5WSRBxebx71rDuh2Tq4",
-      "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY2NzE0NTE3NywiaWF0IjoxNjY3MTQ0NzU3LCJqdGkiOiI2NTU4NjBmNDhhMzQ0ZGQzYWQwZTUwMjExNzE5OTc5MyIsInVzZXJfaWQiOjIzfQ.gq1vNKIsJP6isaOUhoxDaM-R8nfjJ8xORRhwaasdstw"
-    }
-  }
-  ```
-
-  
-
 ### 2. access token이 만료되었을 때, 인증이 필요한 url 접근 시
 
 #### Backend의 응답 
@@ -136,3 +103,9 @@ HTTP Status: 401
 - code가 token_not_valid면 먼저 refresh_token을 `/acconts/token_refresh`로 보냄 
 - `/accounts/token_refresh`에서도 401 응답이 오면 유저를 강제 로그아웃
   - 토큰을 날리고 로그인 페이지로 이동시킴 
+
+### 3-1 
+
+#### 토큰이 만료되었을 때, FE 에서 JWT 디코딩을 진행하고, 시간을 확인 후 바로 로그아웃 시킬수도 있음 ! 
+
+https://www.npmjs.com/package/jwt-decode
